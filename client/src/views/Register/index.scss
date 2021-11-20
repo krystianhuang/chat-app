@@ -1,0 +1,22 @@
+.register-form-wrapper {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 100px;
+
+  .title {
+    font-size: 18px;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .register-form {
+    width: 300px;
+  }
+
+  .register-form-button {
+    margin-right: 8px;
+  }
+}
