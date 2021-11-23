@@ -112,6 +112,13 @@ q {
   quotes: none;
 }
 
+html,
+body,
+#root,
+.app {
+  height: 100%;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

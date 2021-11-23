@@ -1,0 +1,22 @@
+.login-form-wrapper {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 100px;
+
+  .title {
+    font-size: 18px;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .login-form {
+    width: 300px;
+  }
+
+  .login-form-button {
+    margin-right: 8px;
+  }
+}

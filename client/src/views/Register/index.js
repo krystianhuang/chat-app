@@ -2,6 +2,7 @@ import React from 'react'
 import { Form, Input, Button, Checkbox } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 import './index.scss'
 
 const Register = () => {
@@ -52,7 +53,7 @@ const Register = () => {
             Register
           </Button>
           <span>
-            Or <a href=''>Log in</a>
+            Or <Link to='/login'>Log in</Link>
           </span>
         </Form.Item>
       </Form>

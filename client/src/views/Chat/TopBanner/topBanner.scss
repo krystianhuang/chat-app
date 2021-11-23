@@ -1,0 +1,25 @@
+.top-banner {
+  color: #fff;
+  line-height: 50px;
+  color: #fff;
+  height: 50px;
+  padding: 0px 20px;
+  font-size: 16px;
+  border-bottom: 1px solid #000;
+
+  .title {
+  }
+
+  .item {
+    min-width: 80px;
+    cursor: pointer;
+    text-align: center;
+    margin-right: 12px;
+    display: inline-block;
+
+    &.active {
+      background-color: rgba(79, 84, 92, 0.32);
+      border-radius: 4px;
+    }
+  }
+}

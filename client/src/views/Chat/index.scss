@@ -1,0 +1,10 @@
+.chat-wrapper {
+  background-color: #2e2f36;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  .chat-container {
+    flex: 1;
+  }
+}
