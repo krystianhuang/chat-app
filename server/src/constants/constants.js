@@ -14,8 +14,15 @@ const SUCCESS_MSG = {
   ADD_SUCCESSFUL: '添加成功'
 }
 
+const DEFAULT_MESSAGE = {
+  message: '',
+  messageType: 'text',
+  time: Date.now()
+}
+
 module.exports = {
   PORT,
   ERROR_MSG,
-  SUCCESS_MSG
+  SUCCESS_MSG,
+  DEFAULT_MESSAGE
 }
