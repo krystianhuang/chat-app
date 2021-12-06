@@ -1,7 +1,12 @@
+import SocketComponent from '../../components/Socket/Socket'
 import './index.scss'
 
 const Home = () => {
-  return <div>home</div>
+  return (
+    <div>
+      <SocketComponent />
+    </div>
+  )
 }
 
 export default Home
