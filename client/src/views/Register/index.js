@@ -1,13 +1,22 @@
 import React from 'react'
-import { Form, Input, Button, Checkbox } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import axios from 'axios'
-import { Link } from 'react-router-dom'
+import request from '../../services/request'
+import { Link, useNavigate } from 'react-router-dom'
 import './index.scss'
 
 const Register = () => {
+  const navigate = useNavigate()
+
   const onFinish = async values => {
     console.log('Received values of form: ', values)
+    try {
+      await request({ url: '/user/register', data: values, method: 'post' })
+      message.success('Register Successful')
+      navigate('/login')
+    } catch (error) {
+      message.error('Register fail' + error?.msg)
+    }
   }
 
   return (

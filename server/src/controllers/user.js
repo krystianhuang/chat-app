@@ -15,7 +15,7 @@ const login = async (req, res) => {
     return
   }
   if (user.password === password) {
-    successResponse(res, SUCCESS_MSG.LOGIN_SUCCESSFUL)
+    successResponse(res, user, SUCCESS_MSG.LOGIN_SUCCESSFUL)
     return
   }
   errorResponse(res, ERROR_MSG.PASSWORD_ERROR)

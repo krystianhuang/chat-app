@@ -1,15 +1,26 @@
 import React from 'react'
-import { Form, Input, Button, Checkbox } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
+import request from '../../services/request'
 import './index.scss'
+import { setLocal } from '../../utils'
 
 const Login = () => {
   const history = useNavigate()
-
   const onFinish = async values => {
-    history('/home')
-    console.log('Received values of form: ', values)
+    try {
+      const { data } = await request({
+        url: '/user/login',
+        data: values,
+        method: 'post'
+      })
+      message.success('Login successful')
+      setLocal('user', { id: data._id, username: data.username })
+      history('/home')
+    } catch (error) {
+      message.error('Login fail' + error?.data)
+    }
   }
 
   return (

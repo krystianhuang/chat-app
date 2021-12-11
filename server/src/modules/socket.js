@@ -33,7 +33,7 @@ const createSocket = () => {
       const data = await insetMessages(message)
       console.log('message', message.roomId)
 
-      socket.to(message.roomId).emit('receiverMessage', message)
+      socket.in(message.roomId).emit('receiverMessage', message)
 
       // socket.emit('receiverMessage', message)
     })

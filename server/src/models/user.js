@@ -12,6 +12,9 @@ const Userschema = new Monggose.Schema({
     type: String,
     required: 'Password is a required feild'
   },
+  avatar: {
+    type: String
+  },
   createDate: {
     type: Date,
     default: Date.now

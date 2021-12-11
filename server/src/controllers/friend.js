@@ -3,6 +3,17 @@ const { SUCCESS_MSG, ERROR_MSG } = require('../constants/constants')
 const FriendServices = require('../services/friend')
 const UserServices = require('../services/user')
 
+const friendAdapter = list => {
+  return list.map(({ friendId }) => {
+    return {
+      id: friendId._id,
+      username: friendId.username,
+      createDate: friendId.createDate,
+      updateDate: friendId.updateDate
+    }
+  })
+}
+
 const get = async (req, res) => {
   const { selfId } = req.query
   if (!selfId) {
@@ -14,8 +25,7 @@ const get = async (req, res) => {
     path: 'friendId'
   })
 
-  console.log('friends', friends)
-  successResponse(res, friends)
+  successResponse(res, friendAdapter(friends))
 }
 
 const add = async (req, res) => {
