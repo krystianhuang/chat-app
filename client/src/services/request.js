@@ -21,8 +21,6 @@ const request = async ({ url, headers, data, method = 'get' }) => {
       options.data = data
     }
 
-    console.log('options', options)
-
     const res = await axios(options)
     if (res.data.code === 0) {
       return Promise.resolve(res.data)

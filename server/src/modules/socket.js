@@ -30,12 +30,8 @@ const createSocket = () => {
     })
 
     socket.on('sendMessage', async message => {
-      const data = await insetMessages(message)
-      console.log('message', message.roomId)
-
-      socket.in(message.roomId).emit('receiverMessage', message)
-
-      // socket.emit('receiverMessage', message)
+      await insetMessages(message)
+      socket.to(message.roomId).emit('receiverMessage', message)
     })
   })
 }

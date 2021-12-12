@@ -1,7 +1,8 @@
 import ChatList from './ChatList/ChatList'
 import TopBanner from './TopBanner/TopBanner'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { io } from 'socket.io-client'
+import ChatWindow from './ChatWindow/ChatWindow'
 import './index.scss'
 
 export const ChatContext = React.createContext({})
@@ -9,6 +10,17 @@ export const ChatContext = React.createContext({})
 const Chat = () => {
   const socketRef = useRef()
   const [, update] = useState({})
+
+  const [roomId, updateRoomId] = useState('')
+  const [currentChatFriend, updateCurrentChatFriend] = useState({})
+
+  const setRoomId = useCallback(id => {
+    updateRoomId(id)
+  }, [])
+
+  const setCurrentChatFriend = useCallback(v => {
+    updateCurrentChatFriend(v)
+  }, [])
 
   useEffect(() => {
     const initSocket = () => {
@@ -21,11 +33,26 @@ const Chat = () => {
   }, [])
 
   return (
-    <ChatContext.Provider value={{ socket: socketRef.current }}>
+    <ChatContext.Provider
+      value={{
+        socket: socketRef.current,
+        roomId,
+        currentChatFriend,
+        setRoomId,
+        setCurrentChatFriend
+      }}
+    >
       <div className='chat-wrapper'>
         <ChatList />
+
         <div className='chat-container'>
-          <TopBanner />
+          {roomId ? (
+            <ChatWindow />
+          ) : (
+            <>
+              <TopBanner />
+            </>
+          )}
         </div>
       </div>
     </ChatContext.Provider>

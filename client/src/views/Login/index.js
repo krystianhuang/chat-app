@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import request from '../../services/request'
-import './index.scss'
 import { setLocal } from '../../utils'
+import { UserContext } from '../../App'
+import './index.scss'
 
 const Login = () => {
+  const { setUserInfo } = useContext(UserContext)
+
   const history = useNavigate()
+
   const onFinish = async values => {
     try {
       const { data } = await request({
@@ -16,7 +20,9 @@ const Login = () => {
         method: 'post'
       })
       message.success('Login successful')
-      setLocal('user', { id: data._id, username: data.username })
+      const user = { id: data._id, username: data.username }
+      setUserInfo(user)
+      setLocal('user', user)
       history('/home')
     } catch (error) {
       message.error('Login fail' + error?.data)
