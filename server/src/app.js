@@ -7,6 +7,7 @@ const { DB_CONFIG } = require('./config/db')
 const { PORT } = require('./constants/constants')
 const createSocket = require('./modules/socket')
 const path = require('path')
+const useMiddleware = require('./middleware')
 
 const app = express()
 app.use(cors())
@@ -19,7 +20,9 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use('/imgs', express.static(path.join(__dirname, 'imgs')))
 
+useMiddleware(app)
 routes(app)
 
 app.listen(PORT, () => {

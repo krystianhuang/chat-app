@@ -10,3 +10,17 @@ export const getLocal = key => {
     return v
   } catch (error) {}
 }
+
+export const sort = (a, b) => {
+  return a > b ? `${a}-${b}` : `${b}-${a}`
+}
+
+export const toBase64 = file => {
+  return new Promise(reslove => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      reslove(reader.result)
+    }
+  })
+}

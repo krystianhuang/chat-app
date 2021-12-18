@@ -1,6 +1,7 @@
 const { errorResponse, successResponse } = require('../utils/util')
 const { SUCCESS_MSG, ERROR_MSG } = require('../constants/constants')
 const UserServices = require('../services/user')
+const { createToken } = require('../utils/auth')
 
 const login = async (req, res) => {
   if (!req.body.username || !req.body.password) {
@@ -14,11 +15,13 @@ const login = async (req, res) => {
     errorResponse(res, ERROR_MSG.USER_DOSE_NOT_EXIST)
     return
   }
-  if (user.password === password) {
-    successResponse(res, user, SUCCESS_MSG.LOGIN_SUCCESSFUL)
+  if (user.password !== password) {
+    errorResponse(res, ERROR_MSG.PASSWORD_ERROR)
+
     return
   }
-  errorResponse(res, ERROR_MSG.PASSWORD_ERROR)
+  const token = createToken(user._id)
+  successResponse(res, { ...user._doc, token }, SUCCESS_MSG.LOGIN_SUCCESSFUL)
 }
 
 const save = async (req, res) => {

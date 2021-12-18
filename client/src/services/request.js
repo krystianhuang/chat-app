@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getLocal } from '../utils'
 const BASE_URL = 'http://localhost:3001/api'
 
 const request = async ({ url, headers, data, method = 'get' }) => {
@@ -19,6 +20,12 @@ const request = async ({ url, headers, data, method = 'get' }) => {
 
     if (['post'].includes(_method)) {
       options.data = data
+    }
+
+    const token = getLocal('user')?.token
+    if (token) {
+      if (!options.headers) options.headers = {}
+      options.headers.authorization = token
     }
 
     const res = await axios(options)

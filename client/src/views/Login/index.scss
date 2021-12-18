@@ -1,10 +1,27 @@
 .login-form-wrapper {
+  background-image: url('http://localhost:3001/imgs/bg.jpg');
+  background-size: 100% 100%;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  padding-top: 100px;
+  height: 100%;
+
+  .login-container {
+    background-color: #fff;
+    padding: 40px 20px 0 20px;
+    position: relative;
+
+    .avatar-img {
+      width: 100px;
+      position: absolute;
+      display: block;
+      height: 100px;
+      top: -60px;
+      border-radius: 50%;
+    }
+  }
 
   .title {
     font-size: 18px;
@@ -18,5 +35,9 @@
 
   .login-form-button {
     margin-right: 8px;
+  }
+
+  .hidden {
+    display: none;
   }
 }

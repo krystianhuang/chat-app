@@ -1,11 +1,14 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
+import { UserContext } from '../../../App'
 import request from '../../../services/request'
-import { getLocal } from '../../../utils'
+import { getLocal, sort } from '../../../utils'
 import { ChatContext } from '../index'
 import './chatList.scss'
 
 const ChatList = () => {
   const { socket, setRoomId, setCurrentChatFriend } = useContext(ChatContext)
+
+  const { user } = useContext(UserContext)
 
   const [friends, setFriends] = useState([])
 
@@ -25,7 +28,7 @@ const ChatList = () => {
   }, [])
 
   const onFriendClick = v => {
-    const roomId = v.id + getLocal('user').id
+    const roomId = sort(user.id, v.id)
     socket.emit('join', {
       roomId
     })
