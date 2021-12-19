@@ -1,6 +1,6 @@
-import React, { useContext, useRef, useState } from 'react'
-import { Form, Input, Button, message, Upload } from 'antd'
-import { UserOutlined, LockOutlined, UploadOutlined } from '@ant-design/icons'
+import React, { useContext, useState } from 'react'
+import { Form, Input, Button, message } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import request from '../../services/request'
 import { setLocal } from '../../utils'
@@ -9,8 +9,7 @@ import './index.scss'
 
 const Login = () => {
   const { setUserInfo } = useContext(UserContext)
-
-  const [imgUrl, setImgUrl] = useState(
+  const [imgUrl] = useState(
     'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
   )
 
@@ -43,7 +42,7 @@ const Login = () => {
       <div className='login-container'>
         <div className='title'>Login</div>
         <Form className='login-form' onFinish={onFinish}>
-          <img src={imgUrl} className='avatar-img'></img>
+          <img src={imgUrl} className='avatar-img' alt='avatar' />
 
           <Form.Item
             name='username'

@@ -14,7 +14,6 @@ const getRecentMessages = async (req, res) => {
   console.log('roomId', roomId)
   try {
     const data = await Message.get({ roomId })
-      .sort({ _id: -1 })
       .skip(page * pageSize)
       .limit(pageSize)
     console.log('data', data)

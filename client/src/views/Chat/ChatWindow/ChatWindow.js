@@ -1,10 +1,20 @@
-import { Input, Button } from 'antd'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { Input } from 'antd'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { SmileOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { ChatContext } from '../index'
 import { UserContext } from '../../../App'
-import { getLocal } from '../../../utils'
 import request from '../../../services/request'
+import MsgList from './MsgList'
+import EmojiPicker from './EmojiPicker/EmojiPicker'
+import UploadImg from './UploadImg/UploadImg'
 import './chatWindow.scss'
+
+const autoScroll = () => {
+  const ele = document.querySelector('.chat-window')
+  setTimeout(() => {
+    ele.scrollTop = ele.scrollHeight + 60
+  }, 200)
+}
 
 const ChatWindow = () => {
   const { roomId, socket, currentChatFriend } = useContext(ChatContext)
@@ -12,14 +22,20 @@ const ChatWindow = () => {
 
   const [chatMsg, setChatMsg] = useState('')
   const [msgList, setMsgList] = useState([])
+  const [showEmoji, setShowEmoji] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const uploadRef = useRef()
+  const [uploadInfo, setUploadInfo] = useState({})
 
   useEffect(() => {
     socket.on('receiverMessage', msg => {
       setMsgList(v => [...v, msg])
+      autoScroll()
     })
   }, [])
 
   const getMsgList = useCallback(async () => {
+    setLoading(true)
     const res = await request({
       url: '/message/recent',
       data: {
@@ -29,23 +45,46 @@ const ChatWindow = () => {
       }
     })
     setMsgList(res.data)
+    autoScroll()
+    setLoading(false)
   }, [])
+
+  const sendMessage = msg => {
+    const message = {
+      roomId,
+      senderId: user.id,
+      senderName: user.username,
+      senderAvatar: user.avatar,
+      message: msg.message,
+      messageType: msg.messageType
+    }
+    socket.emit('sendMessage', message)
+    return message
+  }
+
+  const choiceEmoji = emoji => {
+    setShowEmoji(false)
+    setChatMsg(chatMsg + emoji.native)
+  }
 
   useEffect(() => {
     getMsgList()
   }, [getMsgList])
 
   const onSend = () => {
-    const msg = {
-      roomId,
-      senderId: getLocal('user').id,
-      senderName: getLocal('user').username,
-      message: chatMsg,
-      messageType: 'text'
-    }
-
-    socket.emit('sendMessage', msg)
+    const msg = sendMessage({ message: chatMsg, messageType: 'text' })
+    setChatMsg('')
     setMsgList([...msgList, msg])
+    autoScroll()
+  }
+
+  const onAddFile = () => {
+    uploadRef.current.click()
+  }
+
+  const onFileChange = (url, file) => {
+    console.log('url', url)
+    setUploadInfo({ url, file })
   }
 
   return (
@@ -54,26 +93,31 @@ const ChatWindow = () => {
         <span className='chat-user-name'>{currentChatFriend.username}</span>
       </div>
 
-      <div className='msg-list'>
-        {msgList.map(v => (
-          <div
-            key={v._id}
-            className={
-              v.senderId === user.id ? 'self-message' : 'other-message'
-            }
-          >
-            {v.message}
-          </div>
-        ))}
-      </div>
+      <MsgList loading={loading} msgList={msgList} />
 
-      <div className='send-container'>
+      <div
+        className={`send-container ${uploadInfo.url ? 'has-upload-img' : ''}`}
+      >
+        {uploadInfo.url ? (
+          <img src={uploadInfo.url} alt='' className='upload-img' />
+        ) : null}
         <Input
+          value={chatMsg}
           size='large'
           className='chat-input'
           onPressEnter={onSend}
           onChange={e => setChatMsg(e.target.value)}
         />
+
+        <PlusCircleOutlined className='add-icon' onClick={onAddFile} />
+        <UploadImg ref={uploadRef} onFileChange={onFileChange} />
+
+        <SmileOutlined
+          className='emoji-icon'
+          onClick={() => setShowEmoji(true)}
+        />
+
+        {showEmoji ? <EmojiPicker choiceEmoji={choiceEmoji} /> : null}
       </div>
     </div>
   )

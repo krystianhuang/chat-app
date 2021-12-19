@@ -15,7 +15,6 @@ const Register = () => {
   const [file, setFile] = useState()
 
   const onFileChange = async e => {
-    console.log('file', e.target.files)
     const [file] = e.target?.files || []
     if (!file) {
       message.warning('Please choose a image')
