@@ -10,4 +10,10 @@ const createMany = messages => {
   return res
 }
 
-module.exports = { get, createMany }
+const deleteOne = message => {
+  const res = Message.deleteOne(message)
+  console.log('message', message)
+  return res
+}
+
+module.exports = { get, createMany, deleteOne }

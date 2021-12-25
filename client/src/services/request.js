@@ -14,7 +14,7 @@ const request = async ({ url, headers, data, method = 'get' }) => {
     }
 
     const _method = method.toLocaleLowerCase()
-    if (['get'].includes(_method)) {
+    if (['get', 'delete'].includes(_method)) {
       options.params = data
     }
 

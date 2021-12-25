@@ -7,6 +7,8 @@ import request from '../../../services/request'
 import MsgList from './MsgList'
 import EmojiPicker from './EmojiPicker/EmojiPicker'
 import UploadImg from './UploadImg/UploadImg'
+import { onUploadImg } from './util'
+import { MSG_SPLIT_STR } from '../../../constants/constants'
 import './chatWindow.scss'
 
 const autoScroll = () => {
@@ -71,9 +73,24 @@ const ChatWindow = () => {
     getMsgList()
   }, [getMsgList])
 
-  const onSend = () => {
-    const msg = sendMessage({ message: chatMsg, messageType: 'text' })
+  const onSend = async () => {
+    let message = {}
+    if (uploadInfo.file) {
+      const url = await onUploadImg(uploadInfo.file)
+      message = {
+        message: `${chatMsg}${MSG_SPLIT_STR}url:${url}`,
+        messageType: 'img'
+      }
+    } else {
+      message = {
+        message: chatMsg,
+        messageType: uploadInfo.file ? 'img' : 'text'
+      }
+    }
+
+    const msg = sendMessage(message)
     setChatMsg('')
+    setUploadInfo({})
     setMsgList([...msgList, msg])
     autoScroll()
   }
@@ -83,9 +100,12 @@ const ChatWindow = () => {
   }
 
   const onFileChange = (url, file) => {
-    console.log('url', url)
     setUploadInfo({ url, file })
   }
+
+  const onDeleteMessage = useCallback(id => {
+    setMsgList(msgs => msgs.filter(v => v._id !== id))
+  }, [])
 
   return (
     <div className='chat-window'>
@@ -93,7 +113,11 @@ const ChatWindow = () => {
         <span className='chat-user-name'>{currentChatFriend.username}</span>
       </div>
 
-      <MsgList loading={loading} msgList={msgList} />
+      <MsgList
+        loading={loading}
+        msgList={msgList}
+        onDeleteMessage={onDeleteMessage}
+      />
 
       <div
         className={`send-container ${uploadInfo.url ? 'has-upload-img' : ''}`}

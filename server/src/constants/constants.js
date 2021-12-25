@@ -7,7 +7,8 @@ const ERROR_MSG = {
   CAN_NOT_ADD_YOURSELF: '自己不能添加自己',
   HAVE_ALREADY_ADDED_THIS_FRIEND: '已经添加过该好友',
   LOGIN_EXPIRED: '登录过期',
-  USER_IS_NOT_LOGIN: '用户未登录'
+  USER_IS_NOT_LOGIN: '用户未登录',
+  PARAMS_ERROR: 'PARAMS_ERROR'
 }
 
 const SUCCESS_MSG = {
