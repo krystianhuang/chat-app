@@ -30,10 +30,16 @@ const WHITE_ROUTES = [
   '/api/upload/file'
 ]
 
+const VALIDATE_MESSAGE_STATUS = {
+  agree: 0,
+  disAgree: 1
+}
+
 module.exports = {
   PORT,
   ERROR_MSG,
   SUCCESS_MSG,
   DEFAULT_MESSAGE,
-  WHITE_ROUTES
+  WHITE_ROUTES,
+  VALIDATE_MESSAGE_STATUS
 }

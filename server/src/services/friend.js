@@ -2,7 +2,9 @@ const Friend = require('../models/friend')
 const User = require('../models/user')
 
 const get = friend => {
-  const res = Friend.find(friend)
+  const res = Friend.find(friend).populate({
+    path: 'friendId'
+  })
   return res
 }
 

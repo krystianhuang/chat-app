@@ -8,27 +8,26 @@ const friendAdapter = list => {
     return {
       id: friendId._id,
       username: friendId.username,
+      avatar: friendId.avatar,
       createDate: friendId.createDate,
       updateDate: friendId.updateDate
     }
   })
 }
 
-const get = async (req, res) => {
+const getFriendList = async (req, res) => {
   const { selfId } = req.query
   if (!selfId) {
     errorResponse(res, ERROR_MSG.USER_DOSE_NOT_EXIST)
     return
   }
 
-  const friends = await FriendServices.get({ selfId }).populate({
-    path: 'friendId'
-  })
+  const friends = await FriendServices.get({ selfId })
 
   successResponse(res, friendAdapter(friends))
 }
 
-const add = async (req, res) => {
+const addFriend = async (req, res) => {
   const { selfId, friendId } = req.body
   if (!selfId || !friendId) {
     errorResponse(res)
@@ -55,6 +54,6 @@ const add = async (req, res) => {
 }
 
 module.exports = {
-  get,
-  add
+  getFriendList,
+  addFriend
 }

@@ -2,6 +2,7 @@ const { errorResponse, successResponse } = require('../utils/util')
 const { SUCCESS_MSG, ERROR_MSG } = require('../constants/constants')
 const UserServices = require('../services/user')
 const { createToken } = require('../utils/auth')
+const { onlineUserList } = require('../modules/socket')
 
 const login = async (req, res) => {
   if (!req.body.username || !req.body.password) {
@@ -42,4 +43,9 @@ const save = async (req, res) => {
   }
 }
 
-module.exports = { login, save }
+const getOnlineUsers = (_, res) => {
+  console.log('onlineUsers', onlineUserList)
+  successResponse(res, onlineUserList)
+}
+
+module.exports = { login, save, getOnlineUsers }
