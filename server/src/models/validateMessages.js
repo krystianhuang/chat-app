@@ -5,7 +5,9 @@ const ValidateMessagesSchema = new Monggose.Schema({
   senderId: {
     type: Monggose.Schema.Types.ObjectId
   },
-  reciverId: {
+  senderUserName: String,
+  senderAvatar: String,
+  receiverId: {
     type: Monggose.Schema.Types.ObjectId
   },
   createDate: {

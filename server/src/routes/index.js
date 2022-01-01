@@ -4,6 +4,7 @@ const friendRouter = require('./friend')
 const messageRouter = require('./message')
 const uploadRouter = require('./upload')
 const validateMessagesRouter = require('./validateMessages')
+const systemRouter = require('./system')
 
 const registeRroutes = app => {
   const router = express.Router()
@@ -13,6 +14,7 @@ const registeRroutes = app => {
   app.use('/api/message', messageRouter)
   app.use('/api/upload', uploadRouter)
   app.use('/api/validateMessages', validateMessagesRouter)
+  app.use('/api/system', systemRouter)
 }
 
 module.exports = registeRroutes

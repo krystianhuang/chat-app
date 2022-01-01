@@ -64,10 +64,8 @@ const createSocket = () => {
     })
 
     socket.on('sendValidateMessage', message => {
-      console.log('message', message)
-      // socket.to(message.roomId).emit('receiveValidateMessage', message)
-      socketIo.sockets.emit('receiveValidateMessage', message)
-      // insertValidateMessage(message)
+      socket.to(message.roomId).emit('receiveValidateMessage', message)
+      insertValidateMessage(message)
     })
 
     socket.on('agreeFriendApply', data => {

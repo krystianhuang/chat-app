@@ -4,9 +4,8 @@ import { UserContext } from '../../../App'
 import { IMG_BASE_URL } from '../../../constants/constants'
 import './topBanner.scss'
 
-const TopBanner = ({ onClick }) => {
+const TopBanner = ({ active, onClick }) => {
   const history = useNavigate()
-  const [active, setactive] = useState('')
   const { user } = useContext(UserContext)
 
   const logout = () => {
@@ -19,7 +18,6 @@ const TopBanner = ({ onClick }) => {
   }
 
   const onTabClick = v => {
-    setactive(v)
     onClick(v)
   }
 
@@ -32,6 +30,12 @@ const TopBanner = ({ onClick }) => {
           className={getClassName('online')}
         >
           Online
+        </span>
+        <span
+          onClick={() => onTabClick('pending')}
+          className={getClassName('pending')}
+        >
+          Pending
         </span>
         <span onClick={() => onTabClick('all')} className={getClassName('all')}>
           All

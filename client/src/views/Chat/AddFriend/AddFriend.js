@@ -1,37 +1,26 @@
-import { Button, Input } from 'antd'
+import { Button, Input, message } from 'antd'
 import { useContext, useEffect, useState } from 'react'
 import { ChatContext } from '..'
 import { UserContext } from '../../../App'
-import request from '../../../services/request'
 import { sort } from '../../../utils'
 import './addFriend.scss'
 
 const AddFriend = () => {
-  const { user } = useContext(UserContext)
+  const { user, systemUsers } = useContext(UserContext)
   const { socket } = useContext(ChatContext)
   const [val, setVal] = useState('')
 
   const onSend = async () => {
     socket.emit('sendValidateMessage', {
       senderId: user.id,
-      roomId: sort(user.id, val),
-      reciverId: val,
+      senderUserName: user.username,
+      senderAvatar: user.avatar,
+      roomId: sort(systemUsers[0]?._id, val),
+      receiverId: val,
       validateType: 0
     })
-    // const res = await request({
-    //   url: '/friend/add',
-    //   method: 'post',
-    //   seselfId: user.id,
-    //   friendId: val
-    // })
-    // console.log('res', res)
+    message.success('Message sent successsfully')
   }
-
-  useEffect(() => {
-    socket.on('receiveValidateMessage', message => {
-      console.log('message', message)
-    })
-  }, [])
 
   return (
     <div className='add-friend-wrapper'>
