@@ -1,6 +1,10 @@
 import { Input } from 'antd'
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { SmileOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import {
+  SmileOutlined,
+  PlusCircleOutlined,
+  ArrowLeftOutlined
+} from '@ant-design/icons'
 import { ChatContext } from '../index'
 import { UserContext } from '../../../App'
 import request from '../../../services/request'
@@ -19,7 +23,7 @@ const autoScroll = () => {
 }
 
 const ChatWindow = () => {
-  const { roomId, socket, currentChatFriend } = useContext(ChatContext)
+  const { roomId, socket, currentChatFriend, reset } = useContext(ChatContext)
   const { user } = useContext(UserContext)
 
   const [chatMsg, setChatMsg] = useState('')
@@ -49,7 +53,7 @@ const ChatWindow = () => {
     setMsgList(res.data)
     autoScroll()
     setLoading(false)
-  }, [])
+  }, [roomId])
 
   const sendMessage = msg => {
     const message = {
@@ -107,9 +111,14 @@ const ChatWindow = () => {
     setMsgList(msgs => msgs.filter(v => v._id !== id))
   }, [])
 
+  const back = () => {
+    reset()
+  }
+
   return (
     <div className='chat-window'>
       <div className='chat-top-banner'>
+        <ArrowLeftOutlined onClick={back} />
         <span className='chat-user-name'>{currentChatFriend.username}</span>
       </div>
 

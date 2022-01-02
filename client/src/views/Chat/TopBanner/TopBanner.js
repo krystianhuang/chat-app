@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../../App'
-import { IMG_BASE_URL } from '../../../constants/constants'
 import './topBanner.scss'
 
 const TopBanner = ({ active, onClick }) => {
@@ -24,7 +23,12 @@ const TopBanner = ({ active, onClick }) => {
   return (
     <div className='top-banner'>
       <div>
-        <span className={getClassName('friends')}>Friends</span>
+        <span
+          onClick={() => onTabClick('friends')}
+          className={getClassName('friends')}
+        >
+          Friends
+        </span>
         <span
           onClick={() => onTabClick('online')}
           className={getClassName('online')}
@@ -37,15 +41,12 @@ const TopBanner = ({ active, onClick }) => {
         >
           Pending
         </span>
-        <span onClick={() => onTabClick('all')} className={getClassName('all')}>
-          All
-        </span>
         <span onClick={() => onTabClick('add')} className={getClassName('add')}>
           Add Friend
         </span>
       </div>
       <div onClick={logout} className='user-avatar'>
-        <img className='avatar' src={IMG_BASE_URL + user.avatar} />
+        <img className='avatar' src={user.avatar} alt='avatar' />
       </div>
     </div>
   )

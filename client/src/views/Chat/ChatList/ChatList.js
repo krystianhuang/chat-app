@@ -1,10 +1,9 @@
 import { Tooltip } from 'antd'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../../App'
-import { IMG_BASE_URL } from '../../../constants/constants'
 import request from '../../../services/request'
 import { getLocal, sort } from '../../../utils'
-import { ChatContext } from '../index'
+import { ChatContext, eventEmitter } from '../index'
 import './chatList.scss'
 
 const ChatList = () => {
@@ -29,7 +28,8 @@ const ChatList = () => {
 
   useEffect(() => {
     getFrends()
-  }, [])
+    eventEmitter.on('getFriends', getFrends)
+  }, [getFrends])
 
   const onFriendClick = v => {
     const roomId = sort(user.id, v.id)
@@ -51,7 +51,7 @@ const ChatList = () => {
             className='friend-item'
             key={v.id}
           >
-            <img className='avatar-img' src={IMG_BASE_URL + v.avatar} />
+            <img className='avatar-img' src={v.avatar} alt='' />
             <span>{v.username}</span>
             <Tooltip title={onlineUsers[v.id] ? 'Online' : 'Offline'}>
               <span

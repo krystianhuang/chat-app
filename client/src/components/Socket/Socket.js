@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
-import Socket from '../../utils/socket'
 import { Input, Button } from 'antd'
 
 let socket

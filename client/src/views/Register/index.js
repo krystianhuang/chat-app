@@ -4,14 +4,13 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import request from '../../services/request'
 import { Link, useNavigate } from 'react-router-dom'
 import { toBase64 } from './../../utils/index'
+import { DEFAULT_AVATAR_URL } from '../../constants/constants'
 import './index.scss'
 
 const Register = () => {
   const navigate = useNavigate()
   const uploadRef = useRef()
-  const [imgUrl, setImgUrl] = useState(
-    'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
-  )
+  const [imgUrl, setImgUrl] = useState(DEFAULT_AVATAR_URL)
   const [file, setFile] = useState()
 
   const onFileChange = async e => {
@@ -41,7 +40,10 @@ const Register = () => {
   }
 
   const onFinish = async values => {
-    const avatar = await upload()
+    let avatar = DEFAULT_AVATAR_URL
+    if (file) {
+      avatar = await upload()
+    }
     try {
       await request({
         url: '/user/register',
@@ -64,6 +66,7 @@ const Register = () => {
             <img
               src={imgUrl}
               className='avatar-img'
+              alt='avatar'
               onClick={() => {
                 console.log('uploadRe', uploadRef.current)
                 uploadRef.current.click()

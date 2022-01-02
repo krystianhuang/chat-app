@@ -8,13 +8,16 @@ const insertValidateMessage = async message => {
 
 const getValidateNews = async (req, res) => {
   try {
+    const { id, status } = req.query
+    if (!id) {
+      return errorResponse(res)
+    }
     const data = await ValidateMessages.get({
-      receiverId: req.query.id
+      receiverId: id,
+      status: status ? Number(status) : 2
     })
-    console.log('req.query.id', req.query.id)
     successResponse(res, data)
   } catch (error) {
-    console.log('error', error)
     errorResponse(res)
   }
 }

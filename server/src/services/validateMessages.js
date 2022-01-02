@@ -1,4 +1,5 @@
 const ValidateMessages = require('../models/validateMessages')
+const { toMongoId } = require('../utils/mongoose')
 
 const get = data => {
   const res = ValidateMessages.find(data)
@@ -11,9 +12,9 @@ const create = data => {
 }
 
 const update = data => {
-  const { roomId, senderId, receiverId, status } = data
-  const res = ValidateMessages.updateMany(
-    { roomId, senderId, receiverId },
+  const { _id, roomId, senderId, receiverId, status } = data
+  const res = ValidateMessages.updateOne(
+    { _id: toMongoId(_id), roomId, senderId, receiverId },
     {
       $set: {
         status

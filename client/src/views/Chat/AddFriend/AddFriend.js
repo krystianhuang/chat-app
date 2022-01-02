@@ -1,5 +1,5 @@
 import { Button, Input, message } from 'antd'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { ChatContext } from '..'
 import { UserContext } from '../../../App'
 import { sort } from '../../../utils'

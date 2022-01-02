@@ -1,8 +1,8 @@
 const Monggose = require('mongoose')
 
 const FriendSchema = new Monggose.Schema({
-  selfId: String,
-  friendId: {
+  senderId: String,
+  receiverId: {
     type: Monggose.Schema.Types.ObjectId,
     ref: 'User'
   },

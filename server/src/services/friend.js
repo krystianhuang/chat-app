@@ -1,9 +1,8 @@
 const Friend = require('../models/friend')
-const User = require('../models/user')
 
 const get = friend => {
   const res = Friend.find(friend).populate({
-    path: 'friendId'
+    path: 'receiverId'
   })
   return res
 }
@@ -14,14 +13,14 @@ const getOne = friend => {
 }
 
 const create = friend => {
-  const { selfId, friendId } = friend
+  const { senderId, receiverId } = friend
   const newFriend = new Friend({
-    selfId,
-    friendId
+    senderId,
+    receiverId
   })
   const friendReverse = new Friend({
-    selfId: friendId,
-    friendId: selfId
+    senderId: receiverId,
+    receiverId: senderId
   })
 
   const res = newFriend.save()
@@ -30,4 +29,8 @@ const create = friend => {
   return [res, friendReverseRes]
 }
 
-module.exports = { get, getOne, create }
+const remove = (req, res) => {
+  const {} = req.body
+}
+
+module.exports = { get, getOne, create, remove }

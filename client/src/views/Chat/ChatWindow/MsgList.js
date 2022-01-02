@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { Skeleton, Modal } from 'antd'
 import { PhotoProvider, PhotoConsumer } from 'react-photo-view'
 import { UserContext } from '../../../App'
-import { IMG_BASE_URL, MSG_SPLIT_STR } from '../../../constants/constants'
+import { MSG_SPLIT_STR } from '../../../constants/constants'
 import { DashOutlined } from '@ant-design/icons'
 import request from '../../../services/request'
 import 'react-photo-view/dist/index.css'
@@ -45,14 +45,11 @@ const MsgList = ({ loading, msgList, onDeleteMessage }) => {
         {getText(v.message) ? (
           <span className='sender-message-content'>{getText(v.message)}</span>
         ) : null}
-        <img src={IMG_BASE_URL + v.senderAvatar} className='message-avatar' />
+        <img src={v.senderAvatar} className='message-avatar' />
         <div className='img-text-msg'>
           <div className='send-message-wrapper'>
-            <PhotoConsumer src={IMG_BASE_URL + getImgUrl(v.message)}>
-              <img
-                src={IMG_BASE_URL + getImgUrl(v.message)}
-                className='sender-message-img'
-              />
+            <PhotoConsumer src={getImgUrl(v.message)}>
+              <img src={getImgUrl(v.message)} className='sender-message-img' />
             </PhotoConsumer>
           </div>
         </div>
@@ -60,7 +57,7 @@ const MsgList = ({ loading, msgList, onDeleteMessage }) => {
     ) : (
       <>
         <span className='sender-message-content'>{v.message}</span>
-        <img src={IMG_BASE_URL + v.senderAvatar} className='message-avatar' />
+        <img src={v.senderAvatar} className='message-avatar' />
       </>
     )
   }
@@ -68,24 +65,21 @@ const MsgList = ({ loading, msgList, onDeleteMessage }) => {
   const rendeOtherMessage = v => {
     return v.messageType === 'img' && getImgUrl(v.message) ? (
       <>
-        <img src={IMG_BASE_URL + v.senderAvatar} className='message-avatar' />
+        <img src={v.senderAvatar} className='message-avatar' />
         {getText(v.message) ? (
           <span className='other-message-content'>{getText(v.message)}</span>
         ) : null}
         <div className='img-text-msg'>
           <div className='other-message-wrapper'>
-            <PhotoConsumer src={IMG_BASE_URL + getImgUrl(v.message)}>
-              <img
-                src={IMG_BASE_URL + getImgUrl(v.message)}
-                className='other-message-img'
-              />
+            <PhotoConsumer src={getImgUrl(v.message)}>
+              <img src={getImgUrl(v.message)} className='other-message-img' />
             </PhotoConsumer>
           </div>
         </div>
       </>
     ) : (
       <>
-        <img src={IMG_BASE_URL + v.senderAvatar} className='message-avatar' />
+        <img src={v.senderAvatar} className='message-avatar' />
         <span className='other-message-content'>{v.message}</span>
       </>
     )
@@ -105,9 +99,9 @@ const MsgList = ({ loading, msgList, onDeleteMessage }) => {
     <div className='msg-list'>
       <PhotoProvider>
         <Skeleton loading={loading}>
-          {msgList.map(v =>
+          {msgList.map((v, i) =>
             v.senderId === user.id ? (
-              <div key={v._id} className='self-message'>
+              <div key={v._id + i} className='self-message'>
                 <div className='self-actions'>
                   <DashOutlined
                     onClick={() => setIsShowAction(!isShowAction)}
@@ -117,7 +111,7 @@ const MsgList = ({ loading, msgList, onDeleteMessage }) => {
                 {renderSelfMessage(v)}
               </div>
             ) : (
-              <div key={v._id} className='other-message'>
+              <div key={v._id + i} className='other-message'>
                 {rendeOtherMessage(v)}
                 <div className='other-actions'>
                   <DashOutlined

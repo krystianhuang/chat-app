@@ -1,28 +1,33 @@
-import { useState, useCallback, useEffect, useContext } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import request from '../../services/request'
 import { getLocal } from '../../utils'
 
 const useChat = () => {
   const [pendingList, setPendingList] = useState([])
 
-  useEffect(() => {
-    const getList = async () => {
-      const res = await request({
-        url: '/validateMessages/list',
-        data: { id: getLocal('user')?.id }
-      })
-      setPendingList(res.data)
-      console.log('pendingList', res)
-    }
-    getList()
+  const getList = useCallback(async () => {
+    const res = await request({
+      url: '/validateMessages/list',
+      data: { id: getLocal('user')?.id }
+    })
+    setPendingList(res.data)
   }, [])
+
+  useEffect(() => {
+    getList()
+  }, [getList])
 
   const addPendingList = useCallback(v => {
     setPendingList(list => [...list, v])
   }, [])
 
+  const updatePendingList = useCallback(v => {
+    setPendingList(v)
+  }, [])
+
   return {
     pendingList,
+    updatePendingList,
     addPendingList
   }
 }

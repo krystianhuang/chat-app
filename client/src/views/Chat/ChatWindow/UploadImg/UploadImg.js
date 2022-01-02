@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import { toBase64 } from '../../../../utils'
 
 const UploadFile = ({ onFileChange }, ref) => {

@@ -14,9 +14,16 @@ import AddFriend from './AddFriend/AddFriend'
 import { sort } from '../../utils'
 import useChat from './useChat'
 import PendingList from './PendingList/PendingList'
-import './index.scss'
 import { notification } from 'antd'
+import EventEmitter from '../../utils/EventEmitter'
+import {
+  agreeValidateNotification,
+  disAgreeValidateNotification,
+  validateNotification
+} from './ChatNotification/ChatNotification'
+import './index.scss'
 
+export const eventEmitter = new EventEmitter()
 export const ChatContext = React.createContext({})
 
 const Chat = () => {
@@ -29,7 +36,7 @@ const Chat = () => {
   const [onlineUsers, setOnlineUsers] = useState({})
   const [active, setActive] = useState('')
 
-  const { pendingList, addPendingList } = useChat()
+  const { pendingList, addPendingList, updatePendingList } = useChat()
 
   const setRoomId = useCallback(id => {
     updateRoomId(id)
@@ -75,30 +82,30 @@ const Chat = () => {
 
   useEffect(() => {
     socketRef.current.on('receiveValidateMessage', message => {
-      notification.info({
-        message: 'The new message',
-        description: (
-          <div>
-            {`${message.senderUserName} request your as a friend`},
-            <span
-              onClick={() => {
-                setActive('pending')
-                notification.destroy()
-              }}
-              style={{ color: '#189099', cursor: 'pointer' }}
-            >
-              Immediately check
-            </span>
-          </div>
-        )
+      validateNotification(message, () => {
+        setActive('pending')
+        notification.destroy()
       })
       addPendingList(message)
+    })
+
+    socketRef.current.on('receiveAgreeFriendApply', message => {
+      eventEmitter.emit('getFriends')
+      agreeValidateNotification(message)
+    })
+
+    socketRef.current.on('receiverDisAgreeFriendApply', message => {
+      disAgreeValidateNotification(message)
     })
   }, [])
 
   const onTabClick = useCallback(v => {
-    console.log('v', v)
     setActive(v)
+  }, [])
+
+  const reset = useCallback(() => {
+    setRoomId('')
+    setActive('')
   }, [])
 
   return (
@@ -109,7 +116,8 @@ const Chat = () => {
         currentChatFriend,
         onlineUsers,
         setRoomId,
-        setCurrentChatFriend
+        setCurrentChatFriend,
+        reset
       }}
     >
       <div className='chat-wrapper'>
@@ -124,7 +132,10 @@ const Chat = () => {
               {active === 'add' ? (
                 <AddFriend />
               ) : active === 'pending' ? (
-                <PendingList list={pendingList} />
+                <PendingList
+                  list={pendingList}
+                  updatePendingList={updatePendingList}
+                />
               ) : null}
             </>
           )}

@@ -1,11 +1,13 @@
 .pending-list {
-  padding: 0 24px;
+  padding: 0 26px 0 34px;
   max-height: 94%;
   overflow: auto;
 
   .pending-item {
     margin-top: 20px;
     color: #fff;
+    display: flex;
+    justify-content: space-between;
 
     .avatar-img {
       width: 50px;
@@ -16,5 +18,25 @@
     .name {
       margin-left: 12px;
     }
+
+    .action-wrapper {
+      .action-icon {
+        cursor: pointer;
+        margin-left: 8px;
+      }
+
+      .aggree {
+        color: green;
+      }
+
+      .disAgree {
+        color: red;
+      }
+    }
+  }
+
+  .none-friend-tip {
+    color: #fff;
+    margin: 20px 0 0 8px;
   }
 }

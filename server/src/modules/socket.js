@@ -69,14 +69,29 @@ const createSocket = () => {
     })
 
     socket.on('agreeFriendApply', data => {
-      const { senderId, friendId, roomId } = data
-      addFriend({ selfId: senderId, friendId })
-      socket.to(roomId).emit('receiveAgreeFriendApply', data)
+      const { id, senderId, receiverId, roomId } = data
+      const senderRoomId = roomId.replace(receiverId, senderId)
+      socket.to(senderRoomId).emit('receiveAgreeFriendApply', data)
       updateMessagesStatus({
+        _id: id,
         roomId,
         senderId,
-        receiverId: friendId,
+        receiverId,
         status: VALIDATE_MESSAGE_STATUS.agree
+      })
+    })
+
+    socket.on('disAgreeFriendApply', data => {
+      const { id, senderId, receiverId, roomId } = data
+      // 给发送方发消息，roomId为 senderId 和 系统用户的id组成
+      const senderRoomId = roomId.replace(receiverId, senderId)
+      socket.to(senderRoomId).emit('receiverDisAgreeFriendApply', data)
+      updateMessagesStatus({
+        _id: id,
+        roomId,
+        senderId,
+        receiverId,
+        status: VALIDATE_MESSAGE_STATUS.disAgree
       })
     })
   })
