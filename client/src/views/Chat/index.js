@@ -21,6 +21,7 @@ import {
   disAgreeValidateNotification,
   validateNotification
 } from './ChatNotification/ChatNotification'
+import Friends from './Friends/Friends'
 import './index.scss'
 
 export const eventEmitter = new EventEmitter()
@@ -100,12 +101,13 @@ const Chat = () => {
   }, [])
 
   const onTabClick = useCallback(v => {
+    console.log('v', v)
     setActive(v)
   }, [])
 
-  const reset = useCallback(() => {
+  const reset = useCallback(v => {
     setRoomId('')
-    setActive('')
+    setActive(v || '')
   }, [])
 
   return (
@@ -136,6 +138,8 @@ const Chat = () => {
                   list={pendingList}
                   updatePendingList={updatePendingList}
                 />
+              ) : active === 'friends' ? (
+                <Friends />
               ) : null}
             </>
           )}

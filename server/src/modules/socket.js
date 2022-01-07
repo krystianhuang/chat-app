@@ -4,7 +4,6 @@ const {
   insertValidateMessage,
   updateMessagesStatus
 } = require('../controllers/validateMessages')
-const { addFriend } = require('../controllers/friend')
 const { VALIDATE_MESSAGE_STATUS } = require('../constants/constants')
 
 const conversationList = {}

@@ -1,7 +1,7 @@
 const User = require('../models/user')
 
-const get = (key, value) => {
-  const res = User.findOne({ [key]: value })
+const get = user => {
+  const res = User.findOne(user)
   return res
 }
 

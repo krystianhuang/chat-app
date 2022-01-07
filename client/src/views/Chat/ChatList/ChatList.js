@@ -26,10 +26,10 @@ const ChatList = () => {
     } catch (error) {}
   }, [])
 
-  useEffect(() => {
-    getFrends()
-    eventEmitter.on('getFriends', getFrends)
-  }, [getFrends])
+  // useEffect(() => {
+  //   getFrends()
+  //   eventEmitter.on('getFriends', getFrends)
+  // }, [getFrends])
 
   const onFriendClick = v => {
     const roomId = sort(user.id, v.id)
@@ -39,8 +39,6 @@ const ChatList = () => {
     setRoomId(roomId)
     setCurrentChatFriend(v)
   }
-
-  console.log('onlineUsers', onlineUsers)
 
   return (
     <div className='chat-list'>

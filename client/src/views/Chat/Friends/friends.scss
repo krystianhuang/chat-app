@@ -1,0 +1,74 @@
+.friend-list {
+  padding: 12px 26px 0 20px;
+
+  .friend-item {
+    color: #8e9297;
+    margin-top: 12px;
+    height: 50px;
+    line-height: 50px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+
+    .friend-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      position: absolute;
+      background-color: #fff;
+      left: 43px;
+      bottom: 1px;
+    }
+
+    .offline {
+      background-color: #79808b;
+    }
+
+    .online {
+      background-color: green;
+    }
+
+    .avatar-img {
+      width: 50px;
+      border-radius: 50%;
+      height: 50px;
+      margin-right: 12px;
+    }
+
+    &:hover {
+      color: #fff;
+      cursor: pointer;
+    }
+  }
+
+  .actions {
+    .icon-box {
+      width: 40px;
+      border-radius: 50%;
+      background-color: #090b0c;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .more-icon {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+.actions-drop-down {
+  .ant-dropdown-menu {
+    background-color: #090b0c;
+    color: #fff;
+
+    .ant-dropdown-menu-item {
+      color: #fff;
+
+      &:hover {
+        background-color: #090b0c;
+      }
+    }
+  }
+}

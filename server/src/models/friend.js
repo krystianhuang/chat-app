@@ -6,7 +6,6 @@ const FriendSchema = new Monggose.Schema({
     type: Monggose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  isDelete: Boolean,
   time: {
     type: Date,
     default: Date.now()

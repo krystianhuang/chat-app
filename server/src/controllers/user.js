@@ -11,7 +11,7 @@ const login = async (req, res) => {
   }
 
   const { username, password } = req.body
-  const user = await UserServices.get('username', username)
+  const user = await UserServices.get({ username: username })
   if (!user) {
     errorResponse(res, ERROR_MSG.USER_DOSE_NOT_EXIST)
     return
@@ -29,7 +29,7 @@ const save = async (req, res) => {
   const user = req.body
   console.log('user', user)
   try {
-    const hasUser = await UserServices.get('username', user.username)
+    const hasUser = await UserServices.get({ username: user.username })
     console.log('hasUser', hasUser)
     if (hasUser) {
       errorResponse(res, ERROR_MSG.USER_NEME_EXISTED)

@@ -29,8 +29,22 @@ const create = friend => {
   return [res, friendReverseRes]
 }
 
-const remove = (req, res) => {
-  const {} = req.body
+const remove = friend => {
+  const { senderId, receiverId } = friend
+  const data = Friend.findOneAndRemove({ senderId, receiverId })
+  return data
 }
 
-module.exports = { get, getOne, create, remove }
+const removeAll = friend => {
+  const { senderId, receiverId } = friend
+  // $or is both parties delete the friendship
+  const data = Friend.remove({
+    $or: [
+      { senderId, receiverId },
+      { senderId: receiverId, receiverId: senderId }
+    ]
+  })
+  return data
+}
+
+module.exports = { get, getOne, create, remove, removeAll }

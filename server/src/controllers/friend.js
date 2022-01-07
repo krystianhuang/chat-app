@@ -2,6 +2,7 @@ const { errorResponse, successResponse } = require('../utils/util')
 const { SUCCESS_MSG, ERROR_MSG } = require('../constants/constants')
 const FriendServices = require('../services/friend')
 const UserServices = require('../services/user')
+const { toMongoId } = require('../utils/mongoose')
 
 const friendAdapter = list => {
   return list.map(({ receiverId }) => {
@@ -33,27 +34,67 @@ const addFriend = async (req, res) => {
     errorResponse(res)
     return
   }
+
   if (senderId === receiverId) {
     errorResponse(res, ERROR_MSG.CAN_NOT_ADD_YOURSELF)
     return
   }
-  const checkUser = await UserServices.get('_id', senderId)
+  const checkUser = await UserServices.get({ _id: senderId })
   if (!checkUser) {
     errorResponse(res, ERROR_MSG.USER_DOSE_NOT_EXIST)
     return
   }
 
-  const checkFriend = await FriendServices.getOne({ senderId, receiverId })
-  if (checkFriend) {
+  const record1 = await FriendServices.getOne({
+    senderId,
+    receiverId
+  })
+  const record2 = await FriendServices.getOne({
+    senderId: receiverId,
+    receiverId: senderId
+  })
+
+  if (record1 && record2) {
     errorResponse(res, ERROR_MSG.HAVE_ALREADY_ADDED_THIS_FRIEND)
     return
   }
 
+  await FriendServices.removeAll({ senderId, receiverId })
   const results = await FriendServices.create({ senderId, receiverId })
-  successResponse(res, results, SUCCESS_MSG.ADD_SUCCESSFUL)
+
+  successResponse(res, results)
+}
+
+const deleteFriend = async (req, res) => {
+  try {
+    const data = await FriendServices.remove(req.query)
+    successResponse(res, data)
+  } catch (error) {
+    errorResponse(res)
+  }
+}
+
+const isFriend = async (req, res) => {
+  try {
+    const { senderId, receiverId } = req.query
+    const record1 = await FriendServices.getOne({
+      senderId,
+      receiverId
+    })
+    const record2 = await FriendServices.getOne({
+      senderId: receiverId,
+      receiverId: senderId
+    })
+
+    successResponse(res, record1 && record2)
+  } catch (error) {
+    errorResponse(res)
+  }
 }
 
 module.exports = {
   getFriendList,
-  addFriend
+  addFriend,
+  isFriend,
+  deleteFriend
 }

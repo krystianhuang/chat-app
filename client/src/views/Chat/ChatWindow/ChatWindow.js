@@ -1,4 +1,4 @@
-import { Input } from 'antd'
+import { Input, Modal } from 'antd'
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import {
   SmileOutlined,
@@ -32,6 +32,7 @@ const ChatWindow = () => {
   const [loading, setLoading] = useState(false)
   const uploadRef = useRef()
   const [uploadInfo, setUploadInfo] = useState({})
+  const [isFriend, setIsFriend] = useState(true)
 
   useEffect(() => {
     socket.on('receiverMessage', msg => {
@@ -40,8 +41,22 @@ const ChatWindow = () => {
     })
   }, [])
 
+  const getIsFriend = useCallback(async () => {
+    try {
+      const res = await request({
+        url: '/friend/isFriend',
+        data: {
+          senderId: user.id,
+          receiverId: currentChatFriend.id
+        }
+      })
+      setIsFriend(res.data)
+    } catch (error) {}
+  }, [])
+
   const getMsgList = useCallback(async () => {
     setLoading(true)
+    await getIsFriend()
     const res = await request({
       url: '/message/recent',
       data: {
@@ -78,6 +93,19 @@ const ChatWindow = () => {
   }, [getMsgList])
 
   const onSend = async () => {
+    if (!isFriend) {
+      const modal = Modal.warning({
+        centered: true,
+        content: <div>The other party is not your friend</div>,
+        okText: 'Go to add',
+        onOk: () => {
+          modal.destroy()
+          reset('add')
+        }
+      })
+      return
+    }
+
     let message = {}
     if (uploadInfo.file) {
       const url = await onUploadImg(uploadInfo.file)
