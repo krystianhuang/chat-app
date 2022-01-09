@@ -22,6 +22,7 @@ import {
   validateNotification
 } from './ChatNotification/ChatNotification'
 import Friends from './Friends/Friends'
+import OnlineFriends from './OnlineFriends/OnlineFriends'
 import './index.scss'
 
 export const eventEmitter = new EventEmitter()
@@ -37,7 +38,14 @@ const Chat = () => {
   const [onlineUsers, setOnlineUsers] = useState({})
   const [active, setActive] = useState('')
 
-  const { pendingList, addPendingList, updatePendingList } = useChat()
+  const {
+    pendingList,
+    friends,
+    addPendingList,
+    updatePendingList,
+    getFriends,
+    updateFriends
+  } = useChat()
 
   const setRoomId = useCallback(id => {
     updateRoomId(id)
@@ -58,14 +66,10 @@ const Chat = () => {
   }, [])
 
   useEffect(() => {
-    if (user.id) {
-      socketRef.current.emit('online', { id: user.id, username: user.username })
-    }
-  }, [user])
-
-  useEffect(() => {
     const getOnlineUsers = async () => {
-      socketRef.current.on('onlineUsers', users => {
+      socketRef.current.on('onlineUsers', async users => {
+        console.log('users', users)
+        getFriends()
         setOnlineUsers(users)
       })
     }
@@ -82,6 +86,15 @@ const Chat = () => {
   }, [systemUsers])
 
   useEffect(() => {
+    if (user.id) {
+      socketRef.current.emit('online', {
+        id: user.id,
+        username: user.username
+      })
+    }
+  }, [user])
+
+  useEffect(() => {
     socketRef.current.on('receiveValidateMessage', message => {
       validateNotification(message, () => {
         setActive('pending')
@@ -91,7 +104,7 @@ const Chat = () => {
     })
 
     socketRef.current.on('receiveAgreeFriendApply', message => {
-      eventEmitter.emit('getFriends')
+      getFriends()
       agreeValidateNotification(message)
     })
 
@@ -100,8 +113,11 @@ const Chat = () => {
     })
   }, [])
 
+  const updateOnlineUsers = useCallback(users => {
+    setOnlineUsers(users)
+  }, [])
+
   const onTabClick = useCallback(v => {
-    console.log('v', v)
     setActive(v)
   }, [])
 
@@ -117,7 +133,10 @@ const Chat = () => {
         roomId,
         currentChatFriend,
         onlineUsers,
+        friends,
+        updateFriends,
         setRoomId,
+        updateOnlineUsers,
         setCurrentChatFriend,
         reset
       }}
@@ -140,6 +159,8 @@ const Chat = () => {
                 />
               ) : active === 'friends' ? (
                 <Friends />
+              ) : active === 'online' ? (
+                <OnlineFriends />
               ) : null}
             </>
           )}

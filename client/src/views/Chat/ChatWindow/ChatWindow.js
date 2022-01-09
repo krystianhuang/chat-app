@@ -23,7 +23,8 @@ const autoScroll = () => {
 }
 
 const ChatWindow = () => {
-  const { roomId, socket, currentChatFriend, reset } = useContext(ChatContext)
+  const { roomId, socket, currentChatFriend, reset, setRoomId } =
+    useContext(ChatContext)
   const { user } = useContext(UserContext)
 
   const [chatMsg, setChatMsg] = useState('')
@@ -140,7 +141,7 @@ const ChatWindow = () => {
   }, [])
 
   const back = () => {
-    reset()
+    setRoomId('')
   }
 
   return (

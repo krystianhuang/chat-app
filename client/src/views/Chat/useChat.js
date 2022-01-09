@@ -4,6 +4,7 @@ import { getLocal } from '../../utils'
 
 const useChat = () => {
   const [pendingList, setPendingList] = useState([])
+  const [friends, setFriends] = useState([])
 
   const getList = useCallback(async () => {
     const res = await request({
@@ -17,6 +18,17 @@ const useChat = () => {
     getList()
   }, [getList])
 
+  const getFriends = useCallback(async () => {
+    try {
+      const user = getLocal('user') || {}
+      const res = await request({
+        url: '/friend/list',
+        data: { selfId: user.id }
+      })
+      setFriends(res.data)
+    } catch (error) {}
+  }, [])
+
   const addPendingList = useCallback(v => {
     setPendingList(list => [...list, v])
   }, [])
@@ -25,10 +37,17 @@ const useChat = () => {
     setPendingList(v)
   }, [])
 
+  const updateFriends = useCallback(v => {
+    setFriends(v)
+  }, [])
+
   return {
     pendingList,
+    friends,
     updatePendingList,
-    addPendingList
+    addPendingList,
+    getFriends,
+    updateFriends
   }
 }
 

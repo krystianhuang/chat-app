@@ -31,7 +31,7 @@ const Login = () => {
       }
       setUserInfo(user)
       setLocal('user', user)
-      history('/home')
+      history('/chat')
     } catch (error) {
       message.error('Login fail' + error?.data)
     }

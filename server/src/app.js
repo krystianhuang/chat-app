@@ -5,7 +5,7 @@ const cors = require('cors')
 const routes = require('./routes')
 const { DB_CONFIG } = require('./config/db')
 const { PORT } = require('./constants/constants')
-const createSocket = require('./modules/socket')
+const { createSocket } = require('./modules/socket')
 const path = require('path')
 const useMiddleware = require('./middleware')
 

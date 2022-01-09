@@ -1,13 +1,17 @@
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../../App'
+import { ChatContext } from '../index'
+import { Menu, Dropdown } from 'antd'
 import './topBanner.scss'
 
 const TopBanner = ({ active, onClick }) => {
   const history = useNavigate()
   const { user } = useContext(UserContext)
+  const { socket } = useContext(ChatContext)
 
   const logout = () => {
+    socket.emit('offline', { id: user.id })
     localStorage.removeItem('user')
     history('/login')
   }
@@ -18,6 +22,12 @@ const TopBanner = ({ active, onClick }) => {
 
   const onTabClick = v => {
     onClick(v)
+  }
+
+  const onMenuClick = e => {
+    if (e.key === 'logout') {
+      logout()
+    }
   }
 
   return (
@@ -45,9 +55,22 @@ const TopBanner = ({ active, onClick }) => {
           Add Friend
         </span>
       </div>
-      <div onClick={logout} className='user-avatar'>
-        <img className='avatar' src={user.avatar} alt='avatar' />
-      </div>
+
+      <Dropdown
+        overlayClassName='actions-drop-down'
+        overlay={
+          <Menu onClick={e => onMenuClick(e)}>
+            <Menu.Item key='profile'>Profile</Menu.Item>
+            <Menu.Item key='logout'>Logout</Menu.Item>
+          </Menu>
+        }
+        trigger={['click']}
+        placement='bottomCenter'
+      >
+        <div className='user-avatar'>
+          <img className='avatar' src={user.avatar} alt='avatar' />
+        </div>
+      </Dropdown>
     </div>
   )
 }

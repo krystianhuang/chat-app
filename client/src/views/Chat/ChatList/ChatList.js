@@ -1,5 +1,5 @@
 import { Tooltip } from 'antd'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { UserContext } from '../../../App'
 import request from '../../../services/request'
 import { getLocal, sort } from '../../../utils'
@@ -40,6 +40,8 @@ const ChatList = () => {
     setCurrentChatFriend(v)
   }
 
+  const isOnline = useMemo(() => v => onlineUsers[v.id], [onlineUsers])
+
   return (
     <div className='chat-list'>
       <div className='friend-list'>
@@ -51,10 +53,10 @@ const ChatList = () => {
           >
             <img className='avatar-img' src={v.avatar} alt='' />
             <span>{v.username}</span>
-            <Tooltip title={onlineUsers[v.id] ? 'Online' : 'Offline'}>
+            <Tooltip title={isOnline(v) ? 'Online' : 'Offline'}>
               <span
                 className={`friend-status ${
-                  onlineUsers[v.id] ? 'online' : 'offline'
+                  isOnline(v) ? 'online' : 'offline'
                 } `}
               ></span>
             </Tooltip>

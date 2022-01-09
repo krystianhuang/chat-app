@@ -1,8 +1,7 @@
 const { errorResponse, successResponse } = require('../utils/util')
-const { SUCCESS_MSG, ERROR_MSG } = require('../constants/constants')
+const { ERROR_MSG } = require('../constants/constants')
 const FriendServices = require('../services/friend')
 const UserServices = require('../services/user')
-const { toMongoId } = require('../utils/mongoose')
 
 const friendAdapter = list => {
   return list.map(({ receiverId }) => {
@@ -16,6 +15,11 @@ const friendAdapter = list => {
   })
 }
 
+const getFriends = async id => {
+  const friends = await FriendServices.get({ senderId: id })
+  return friendAdapter(friends)
+}
+
 const getFriendList = async (req, res) => {
   const { selfId } = req.query
   if (!selfId) {
@@ -23,9 +27,8 @@ const getFriendList = async (req, res) => {
     return
   }
 
-  const friends = await FriendServices.get({ senderId: selfId })
-
-  successResponse(res, friendAdapter(friends))
+  const friends = await getFriends(selfId)
+  successResponse(res, friends)
 }
 
 const addFriend = async (req, res) => {
@@ -94,6 +97,7 @@ const isFriend = async (req, res) => {
 
 module.exports = {
   getFriendList,
+  getFriends,
   addFriend,
   isFriend,
   deleteFriend

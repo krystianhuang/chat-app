@@ -5,12 +5,16 @@ const {
   updateMessagesStatus
 } = require('../controllers/validateMessages')
 const { VALIDATE_MESSAGE_STATUS } = require('../constants/constants')
+const { getFriends } = require('../controllers/friend')
 
 const conversationList = {}
 
 /** TODO: redis  */
 const onlineUserList = {}
-exports.onlineUserList = onlineUserList
+
+const geOnlineUserList = (req, res) => {
+  console.log('onlineUsers', onlineUserList)
+}
 
 const createSocket = () => {
   const socketIo = new Server(3002, {
@@ -30,7 +34,7 @@ const createSocket = () => {
   socketIo.on('connection', socket => {
     console.log('Socket connect success')
 
-    socket.on('online', user => {
+    socket.on('online', async user => {
       if (!user) return
       onlineUserList[user.id] = {
         id: user.id,
@@ -38,10 +42,10 @@ const createSocket = () => {
         loginTime: Date.now()
       }
       socketIo.sockets.emit('onlineUsers', onlineUserList)
-      // socket.emit('onlineUsers', onlineUserList)
     })
 
-    socket.on('offline', user => {
+    socket.on('offline', async user => {
+      console.log('user', user)
       if (!user) return
       if (onlineUserList[user.id]) {
         delete onlineUserList[user.id]
@@ -50,7 +54,6 @@ const createSocket = () => {
     })
 
     socket.on('join', async ({ roomId }) => {
-      console.log('roomId', roomId)
       await socket.join(roomId)
       conversationList[roomId] = socket.id
       socketIo.in(roomId).emit('conversationList', conversationList)
@@ -96,4 +99,4 @@ const createSocket = () => {
   })
 }
 
-module.exports = createSocket
+module.exports = { geOnlineUserList, createSocket }
