@@ -28,6 +28,9 @@ const TopBanner = ({ active, onClick }) => {
     if (e.key === 'logout') {
       logout()
     }
+    if (e.key === 'personal') {
+      history('/user/' + user.id)
+    }
   }
 
   return (
@@ -60,7 +63,7 @@ const TopBanner = ({ active, onClick }) => {
         overlayClassName='actions-drop-down'
         overlay={
           <Menu onClick={e => onMenuClick(e)}>
-            <Menu.Item key='profile'>Profile</Menu.Item>
+            <Menu.Item key='personal'>Personal center</Menu.Item>
             <Menu.Item key='logout'>Logout</Menu.Item>
           </Menu>
         }

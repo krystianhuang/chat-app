@@ -1,7 +1,7 @@
 const { errorResponse, successResponse } = require('../utils/util')
 const { SUCCESS_MSG, ERROR_MSG } = require('../constants/constants')
 const UserServices = require('../services/user')
-const { createToken } = require('../utils/auth')
+const { createToken, parseToken } = require('../utils/auth')
 const { onlineUserList } = require('../modules/socket')
 
 const login = async (req, res) => {
@@ -27,7 +27,6 @@ const login = async (req, res) => {
 
 const save = async (req, res) => {
   const user = req.body
-  console.log('user', user)
   try {
     const hasUser = await UserServices.get({ username: user.username })
     console.log('hasUser', hasUser)
@@ -43,9 +42,38 @@ const save = async (req, res) => {
   }
 }
 
+const getUserInfo = async (req, res) => {
+  try {
+    const user = await UserServices.get({ _id: req.params.id })
+    if (user) {
+      return successResponse(res, user)
+    }
+    errorResponse(res, {})
+  } catch (error) {
+    errorResponse(res, {})
+  }
+}
+
+const updateUserInfo = async (req, res) => {
+  try {
+    const { userId } = req.body
+    if (parseToken(req.headers.authorization) !== userId) {
+      return errorResponse(res, ERROR_MSG.NO_PERMISSION)
+    }
+
+    const user = await UserServices.update(req.body)
+    if (user) {
+      return successResponse(res, user)
+    }
+    errorResponse(res)
+  } catch (error) {
+    console.log('error', error)
+    errorResponse(res)
+  }
+}
+
 const getOnlineUsers = (_, res) => {
-  console.log('onlineUsers', onlineUserList)
   successResponse(res, onlineUserList)
 }
 
-module.exports = { login, save, getOnlineUsers }
+module.exports = { login, save, getOnlineUsers, getUserInfo, updateUserInfo }

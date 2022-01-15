@@ -1,6 +1,7 @@
 import { Tooltip, Menu, Dropdown, Modal } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
 import { useContext, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../../App'
 import request from '../../../services/request'
 import { sort } from '../../../utils'
@@ -8,6 +9,8 @@ import { ChatContext } from '../index'
 import './friendList.scss'
 
 const Friends = ({ friends, setFriends }) => {
+  const history = useNavigate()
+
   const { socket, onlineUsers, setRoomId, setCurrentChatFriend } =
     useContext(ChatContext)
 
@@ -54,7 +57,15 @@ const Friends = ({ friends, setFriends }) => {
           key={v.id}
         >
           <div>
-            <img className='avatar-img' src={v.avatar} alt='' />
+            <img
+              className='avatar-img'
+              src={v.avatar}
+              alt='avatar'
+              onClick={e => {
+                e.stopPropagation()
+                history(`/user/${v.id}`)
+              }}
+            />
             <span>{v.username}</span>
             <Tooltip title={isOnline(v) ? 'Online' : 'Offline'}>
               <span

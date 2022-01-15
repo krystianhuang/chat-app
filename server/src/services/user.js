@@ -11,4 +11,9 @@ const create = user => {
   return newUser.save()
 }
 
-module.exports = { get, create }
+const update = user => {
+  const res = User.findByIdAndUpdate({ _id: user.userId }, user)
+  return res
+}
+
+module.exports = { get, create, update }

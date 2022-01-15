@@ -74,7 +74,7 @@ const Chat = () => {
       })
     }
     getOnlineUsers()
-  }, [])
+  }, [getFriends])
 
   useEffect(() => {
     if (!systemUsers.length) return
@@ -83,7 +83,7 @@ const Chat = () => {
         roomId: sort(v._id, user.id)
       })
     })
-  }, [systemUsers])
+  }, [user.id, systemUsers])
 
   useEffect(() => {
     if (user.id) {
@@ -111,7 +111,7 @@ const Chat = () => {
     socketRef.current.on('receiverDisAgreeFriendApply', message => {
       disAgreeValidateNotification(message)
     })
-  }, [])
+  }, [addPendingList, getFriends])
 
   const updateOnlineUsers = useCallback(users => {
     setOnlineUsers(users)

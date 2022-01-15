@@ -18,7 +18,7 @@ const request = async ({ url, headers, data, method = 'get' }) => {
       options.params = data
     }
 
-    if (['post'].includes(_method)) {
+    if (['post', 'put'].includes(_method)) {
       options.data = data
     }
 

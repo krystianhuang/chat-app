@@ -3,6 +3,7 @@ import Login from '../views/Login'
 import Home from '../views/Home'
 import { Routes, Route } from 'react-router-dom'
 import Chat from '../views/Chat'
+import User from '../views/User'
 
 const Router = () => {
   return (
@@ -11,6 +12,7 @@ const Router = () => {
       <Route path='/login' element={<Login />} />
       <Route path='/home' element={<Home />} />
       <Route path='/chat' element={<Chat />} />
+      <Route path='/user/:id' element={<User />} />
     </Routes>
   )
 }

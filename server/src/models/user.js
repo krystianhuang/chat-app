@@ -12,9 +12,14 @@ const Userschema = new Monggose.Schema({
     type: String,
     required: 'Password is a required feild'
   },
-  avatar: {
-    type: String
+  avatar: String,
+  hobby: String,
+  sex: {
+    type: Number, // 0 : man , 1 : woman, 2: unknown
+    default: 2
   },
+  birthday: Number,
+  description: String,
   createDate: {
     type: Date,
     default: Date.now
