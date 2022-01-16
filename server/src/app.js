@@ -8,6 +8,7 @@ const { PORT } = require('./constants/constants')
 const { createSocket } = require('./modules/socket')
 const path = require('path')
 const useMiddleware = require('./middleware')
+// const Redis = require('./modules/redis')
 
 const app = express()
 app.use(cors())
@@ -15,6 +16,9 @@ const http = require('http').createServer(app)
 mongoose.connect(DB_CONFIG.url)
 
 createSocket(http)
+
+// const redis = new Redis()
+// exports.redis = redis
 
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))

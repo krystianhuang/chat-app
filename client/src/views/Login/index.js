@@ -80,7 +80,7 @@ const Login = () => {
               htmlType='submit'
               className='login-form-button'
             >
-              login
+              Login
             </Button>
             <span>
               Or <Link to='/register'>Register</Link>

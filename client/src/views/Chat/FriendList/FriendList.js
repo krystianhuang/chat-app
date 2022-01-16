@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../../App'
 import request from '../../../services/request'
 import { sort } from '../../../utils'
-import { ChatContext } from '../index'
+import { ChatContext, eventEmitter } from '../index'
 import './friendList.scss'
 
 const Friends = ({ friends, setFriends }) => {
@@ -16,13 +16,25 @@ const Friends = ({ friends, setFriends }) => {
 
   const { user } = useContext(UserContext)
 
-  const onFriendClick = v => {
+  const onFriendClick = async v => {
     const roomId = sort(user.id, v.id)
     socket.emit('join', {
       roomId
     })
     setRoomId(roomId)
     setCurrentChatFriend(v)
+    await request({
+      url: '/chat/addConversation',
+      method: 'post',
+      data: {
+        senderId: user.id,
+        receiverId: v.id,
+        receiverAvatar: v.avatar,
+        receiverName: v.username,
+        roomId: sort(user.id, v.id)
+      }
+    })
+    eventEmitter.emit('getChatList')
   }
 
   const onMenuClick = async (e, v) => {

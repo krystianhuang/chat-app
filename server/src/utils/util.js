@@ -14,7 +14,12 @@ const errorResponse = (res, msg = 'FAILED', code = 1) => {
   })
 }
 
+const isObject = v => {
+  return Object.prototype.toString.call(v) === '[object Object]'
+}
+
 module.exports = {
   successResponse,
-  errorResponse
+  errorResponse,
+  isObject
 }
