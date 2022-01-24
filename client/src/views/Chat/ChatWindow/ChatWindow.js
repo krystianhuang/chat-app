@@ -94,18 +94,18 @@ const ChatWindow = () => {
   }, [getMsgList])
 
   const onSend = async () => {
-    if (!isFriend) {
-      const modal = Modal.warning({
-        centered: true,
-        content: <div>The other party is not your friend</div>,
-        okText: 'Go to add',
-        onOk: () => {
-          modal.destroy()
-          reset('add')
-        }
-      })
-      return
-    }
+    // if (!isFriend) {
+    //   const modal = Modal.warning({
+    //     centered: true,
+    //     content: <div>The other party is not your friend</div>,
+    //     okText: 'Go to add',
+    //     onOk: () => {
+    //       modal.destroy()
+    //       reset('add')
+    //     }
+    //   })
+    //   return
+    // }
 
     let message = {}
     if (uploadInfo.file) {

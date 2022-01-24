@@ -2,6 +2,7 @@ const { errorResponse, successResponse } = require('../utils/util')
 const { ERROR_MSG } = require('../constants/constants')
 const FriendServices = require('../services/friend')
 const UserServices = require('../services/user')
+const { objectIdToId } = require('../utils/mongoose')
 
 const friendAdapter = list => {
   return list.map(({ receiverId }) => {
@@ -42,7 +43,7 @@ const addFriend = async (req, res) => {
     errorResponse(res, ERROR_MSG.CAN_NOT_ADD_YOURSELF)
     return
   }
-  const checkUser = await UserServices.get({ _id: senderId })
+  const checkUser = await UserServices.getOne({ _id: senderId })
   if (!checkUser) {
     errorResponse(res, ERROR_MSG.USER_DOSE_NOT_EXIST)
     return
@@ -95,10 +96,44 @@ const isFriend = async (req, res) => {
   }
 }
 
+const getRecommendFriends = async (req, res) => {
+  const { userId, hobby } = req.query
+  if (!hobby) return successResponse(res, [])
+  const regex = new RegExp(hobby, 'i')
+
+  const friends = await FriendServices.get({ senderId: userId })
+  const recommends = []
+  const users = await UserServices.get({
+    _id: { $ne: userId },
+    hobby: { $regex: regex }
+  })
+
+  console.log('users', users)
+
+  users.forEach(u => {
+    if (
+      !friends.find(f => objectIdToId(f.receiverId._id) === objectIdToId(u._id))
+    ) {
+      recommends.push(u)
+    }
+
+    // friends.forEach(f => {
+    //   console.log('f', f)
+    //   // exclude friends
+    //   if (objectIdToId(f.receiverId._id) !== objectIdToId(u._id)) {
+    //     recommends.push(u)
+    //   }
+    // })
+  })
+
+  successResponse(res, recommends)
+}
+
 module.exports = {
   getFriendList,
   getFriends,
   addFriend,
   isFriend,
-  deleteFriend
+  deleteFriend,
+  getRecommendFriends
 }

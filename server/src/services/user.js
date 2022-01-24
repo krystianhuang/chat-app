@@ -1,7 +1,12 @@
 const User = require('../models/user')
 
-const get = user => {
+const getOne = user => {
   const res = User.findOne(user)
+  return res
+}
+
+const get = user => {
+  const res = User.find(user)
   return res
 }
 
@@ -16,4 +21,4 @@ const update = user => {
   return res
 }
 
-module.exports = { get, create, update }
+module.exports = { get, getOne, create, update }

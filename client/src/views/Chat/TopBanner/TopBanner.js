@@ -57,6 +57,13 @@ const TopBanner = ({ active, onClick }) => {
         <span onClick={() => onTabClick('add')} className={getClassName('add')}>
           Add Friend
         </span>
+
+        <span
+          onClick={() => onTabClick('recommend')}
+          className={`${getClassName('recommend')} recommend-item`}
+        >
+          Recommend
+        </span>
       </div>
 
       <Dropdown

@@ -52,7 +52,7 @@ const Friends = ({ friends, setFriends }) => {
               receiverId: v.id
             }
           })
-          setFriends(friends.filter(f => v.id !== v.id))
+          setFriends(friends.filter(f => f.id !== v.id))
         }
       })
     }

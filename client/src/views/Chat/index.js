@@ -23,6 +23,7 @@ import {
 } from './ChatNotification/ChatNotification'
 import Friends from './Friends/Friends'
 import OnlineFriends from './OnlineFriends/OnlineFriends'
+import RecommendList from './Recommend/Recommend'
 import './index.scss'
 
 export const eventEmitter = new EventEmitter()
@@ -161,6 +162,8 @@ const Chat = () => {
                 <Friends />
               ) : active === 'online' ? (
                 <OnlineFriends />
+              ) : active === 'recommend' ? (
+                <RecommendList />
               ) : null}
             </>
           )}

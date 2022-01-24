@@ -8,5 +8,6 @@ router.post('/add', FriendController.addFriend)
 router.delete('/friends', FriendController.deleteFriend)
 router.get('/isFriend', FriendController.isFriend)
 router.get('/onlineUsers', geOnlineUserList)
+router.get('/recommend', FriendController.getRecommendFriends)
 
 module.exports = router

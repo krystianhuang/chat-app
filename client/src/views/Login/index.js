@@ -27,7 +27,10 @@ const Login = () => {
         id: data._id,
         username: data.username,
         token: data.token,
-        avatar: data.avatar
+        avatar: data.avatar,
+        hobby: data.hobby,
+        sex: data.sex,
+        description: data.description
       }
       setUserInfo(user)
       setLocal('user', user)

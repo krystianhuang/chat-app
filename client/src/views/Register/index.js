@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Form, Input, Button, message } from 'antd'
-import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { UserOutlined, LockOutlined, HeartOutlined } from '@ant-design/icons'
 import request from '../../services/request'
 import { Link, useNavigate } from 'react-router-dom'
 import { toBase64 } from './../../utils/index'
@@ -107,6 +107,13 @@ const Register = () => {
               prefix={<LockOutlined className='site-form-item-icon' />}
               type='password'
               placeholder='Password'
+            />
+          </Form.Item>
+
+          <Form.Item name='hobby'>
+            <Input
+              prefix={<HeartOutlined />}
+              placeholder='Hobby multiple are separated by commas'
             />
           </Form.Item>
 
