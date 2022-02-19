@@ -6,7 +6,7 @@ import request from '../../../services/request'
 import './pendingList.scss'
 
 const PendingList = ({ list, updatePendingList }) => {
-  const { socket } = useContext(ChatContext)
+  const { socket, getFriends } = useContext(ChatContext)
 
   const reload = (id, index) => {
     updatePendingList(
@@ -36,7 +36,7 @@ const PendingList = ({ list, updatePendingList }) => {
         }
       })
       reload(_id, index)
-      eventEmitter.emit('getFriends')
+      getFriends()
 
       socket.emit('agreeFriendApply', {
         id: _id,

@@ -1,8 +1,9 @@
 const { errorResponse, successResponse } = require('../utils/util')
-const { ERROR_MSG } = require('../constants/constants')
+const { ERROR_MSG, USER_STATUS } = require('../constants/constants')
 const FriendServices = require('../services/friend')
 const UserServices = require('../services/user')
 const { objectIdToId } = require('../utils/mongoose')
+const redis = require('../modules/redis')
 
 const friendAdapter = list => {
   return list.map(({ receiverId }) => {
@@ -108,25 +109,34 @@ const getRecommendFriends = async (req, res) => {
     hobby: { $regex: regex }
   })
 
-  console.log('users', users)
+  const disLikeUsers = (await redis.getValue('disLikeUsers')) || []
 
   users.forEach(u => {
     if (
-      !friends.find(f => objectIdToId(f.receiverId._id) === objectIdToId(u._id))
+      !friends.find(
+        f => objectIdToId(f.receiverId._id) === objectIdToId(u._id)
+      ) &&
+      !(disLikeUsers[userId] || []).includes(objectIdToId(u._id))
     ) {
       recommends.push(u)
     }
-
-    // friends.forEach(f => {
-    //   console.log('f', f)
-    //   // exclude friends
-    //   if (objectIdToId(f.receiverId._id) !== objectIdToId(u._id)) {
-    //     recommends.push(u)
-    //   }
-    // })
   })
 
   successResponse(res, recommends)
+}
+
+const notInterested = async (req, res) => {
+  const { userId, disLikeUserId } = req.body
+  console.log('userId', userId)
+  try {
+    const disLikeUsers = (await redis.getValue('disLikeUsers')) || {}
+    disLikeUsers[userId] = [...(disLikeUsers[userId] || []), disLikeUserId]
+    await redis.setValue('disLikeUsers', disLikeUsers)
+    successResponse(res)
+  } catch (error) {
+    console.log('error', error)
+    errorResponse(res)
+  }
 }
 
 module.exports = {
@@ -135,5 +145,6 @@ module.exports = {
   addFriend,
   isFriend,
   deleteFriend,
-  getRecommendFriends
+  getRecommendFriends,
+  notInterested
 }

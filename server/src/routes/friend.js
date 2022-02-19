@@ -9,5 +9,6 @@ router.delete('/friends', FriendController.deleteFriend)
 router.get('/isFriend', FriendController.isFriend)
 router.get('/onlineUsers', geOnlineUserList)
 router.get('/recommend', FriendController.getRecommendFriends)
+router.put('/disLike', FriendController.notInterested)
 
 module.exports = router

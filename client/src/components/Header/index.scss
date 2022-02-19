@@ -1,4 +1,33 @@
 .header-wrapper {
+  height: 60px;
+  line-height: 60px;
+  background-color: #2e2f36;
+  border-bottom: 1px solid #000;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 20px;
+
   .link {
+    color: #fff;
+    font-size: 16px;
+    margin-right: 40px;
+  }
+
+  .active {
+    color: #1890ff;
+  }
+
+  .user-avatar {
+    cursor: pointer;
+
+    .avatar {
+      border-radius: 50%;
+      width: 50px;
+    }
+
+    .user-name {
+      margin-left: 8px;
+      color: #fff;
+    }
   }
 }

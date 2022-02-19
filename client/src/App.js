@@ -1,6 +1,6 @@
 import Router from './router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { getLocal } from './utils'
+import { getLocal, setLocal } from './utils'
 import request from './services/request'
 import './assets/css/index.scss'
 
@@ -22,6 +22,7 @@ function App() {
 
   const setUserInfo = useCallback(user => {
     setUser(user)
+    setLocal('user', user)
   }, [])
 
   return (

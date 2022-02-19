@@ -53,17 +53,17 @@ const ChatList = () => {
       centered: true,
       onOk: async () => {
         try {
-          const res = await request({
+          await request({
             url: '/chat/deleteConversation',
             method: 'delete',
             data: {
               receiverId: v.receiverId
             }
           })
-          setChatList(res.data)
-          message.success('successfully deleted')
+          getChatList()
+          message.success('Successfully deleted')
         } catch (error) {
-          message.success('failed to delete')
+          message.error('Failed to delete')
         }
       }
     })

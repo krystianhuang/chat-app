@@ -2,10 +2,10 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import request from '../../../services/request'
 import { getLocal, sort } from '../../../utils'
-import { Skeleton, Card, Avatar, message } from 'antd'
-import { PlusOutlined, WechatOutlined } from '@ant-design/icons'
+import { Skeleton, Card, Avatar, message, Tooltip, Modal } from 'antd'
+import { PlusOutlined, WechatOutlined, CloseOutlined } from '@ant-design/icons'
 import { UserContext } from '../../../App'
-import { ChatContext } from '../'
+import { ChatContext, eventEmitter } from '../'
 import './recommend.scss'
 
 const { Meta } = Card
@@ -46,17 +46,32 @@ const RecommendList = () => {
     })
     setRoomId(roomId)
     setCurrentChatFriend(v)
+
+    // 如果是两个陌生人聊天，则保存双方的会话记录
     await request({
       url: '/chat/addConversation',
       method: 'post',
       data: {
         senderId: user.id,
-        receiverId: v.id,
+        receiverId: v._id,
         receiverAvatar: v.avatar,
         receiverName: v.username,
         roomId
       }
     })
+
+    await request({
+      url: '/chat/addConversation',
+      method: 'post',
+      data: {
+        senderId: v._id,
+        receiverId: user.id,
+        receiverAvatar: user.avatar,
+        receiverName: user.username,
+        roomId
+      }
+    })
+    eventEmitter.emit('getChatList')
   }
 
   const addFriend = v => {
@@ -69,6 +84,29 @@ const RecommendList = () => {
       validateType: 0
     })
     message.success('Message sent successsfully')
+  }
+
+  const disLike = async v => {
+    Modal.confirm({
+      centered: true,
+      content: 'Are you sure this person is not interested?',
+      onOk: async () => {
+        try {
+          const res = await request({
+            url: '/friend/disLike',
+            method: 'put',
+            data: {
+              userId: user.id,
+              disLikeUserId: v._id
+            }
+          })
+          getRecommendList()
+          message.success('Successful operation')
+        } catch (error) {
+          message.error('Failed operation')
+        }
+      }
+    })
   }
 
   return (
@@ -86,6 +124,11 @@ const RecommendList = () => {
                   style={{ width: 300, marginTop: 16 }}
                   actions={[
                     <WechatOutlined key='chat' onClick={() => goChat(user)} />,
+
+                    <Tooltip key='dislike' content='Not interested'>
+                      <CloseOutlined onClick={() => disLike(user)} />
+                    </Tooltip>,
+
                     <PlusOutlined key='edit' onClick={() => addFriend(user)} />
                   ]}
                 >

@@ -135,6 +135,7 @@ const Chat = () => {
         currentChatFriend,
         onlineUsers,
         friends,
+        getFriends,
         updateFriends,
         setRoomId,
         updateOnlineUsers,

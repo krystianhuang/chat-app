@@ -13,7 +13,7 @@ const TopBanner = ({ active, onClick }) => {
   const logout = () => {
     socket.emit('offline', { id: user.id })
     localStorage.removeItem('user')
-    history('/login')
+    history('/login', { replace: true })
   }
 
   const getClassName = v => {
@@ -79,6 +79,7 @@ const TopBanner = ({ active, onClick }) => {
       >
         <div className='user-avatar'>
           <img className='avatar' src={user.avatar} alt='avatar' />
+          <span className='user-name'>{user.username}</span>
         </div>
       </Dropdown>
     </div>

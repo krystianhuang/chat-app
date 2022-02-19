@@ -11,11 +11,14 @@ const addConversation = async (req, res) => {
     let chatList = (await redis.getValue('chatList')) || []
     const record = chatList.find(v => v.roomId === params.roomId)
     const nowTime = Math.round(new Date().getTime() / 1000)
+    console.log('record', record)
+    // TODO: 更改判斷， key value 形式，用 senderId 做key
     if (record) {
       record.createTime = nowTime
     } else {
       chatList = [...chatList, { ...params, createTime: nowTime }]
     }
+
     redis.setValue('chatList', chatList)
     successResponse(res, chatList)
   } catch (error) {

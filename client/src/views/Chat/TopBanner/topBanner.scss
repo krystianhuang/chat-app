@@ -10,14 +10,15 @@
   justify-content: space-between;
 
   .user-avatar {
-    height: 42px;
-    line-height: 45px;
     cursor: pointer;
 
     .avatar {
       border-radius: 50%;
-      width: 100%;
-      height: 100%;
+      width: 42px;
+    }
+
+    .user-name {
+      margin-left: 8px;
     }
   }
 
