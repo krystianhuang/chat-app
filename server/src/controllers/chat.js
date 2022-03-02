@@ -8,19 +8,25 @@ const addConversation = async (req, res) => {
       errorResponse()
       return
     }
-    let chatList = (await redis.getValue('chatList')) || []
-    const record = chatList.find(v => v.roomId === params.roomId)
+    let conversationMap = (await redis.getValue('conversationMap')) || {}
     const nowTime = Math.round(new Date().getTime() / 1000)
-    console.log('record', record)
-    // TODO: 更改判斷， key value 形式，用 senderId 做key
-    if (record) {
-      record.createTime = nowTime
+    if (conversationMap[params.senderId]) {
+      // if have not record
+      if (
+        !conversationMap[params.senderId].find(
+          v => v.receiverId === params.receiverId
+        )
+      ) {
+        conversationMap[params.senderId] = [
+          ...conversationMap[params.senderId],
+          { ...params, createTime: nowTime }
+        ]
+      }
     } else {
-      chatList = [...chatList, { ...params, createTime: nowTime }]
+      conversationMap[params.senderId] = [{ ...params, createTime: nowTime }]
     }
-
-    redis.setValue('chatList', chatList)
-    successResponse(res, chatList)
+    redis.setValue('conversationMap', conversationMap)
+    successResponse(res, conversationMap[params.senderId])
   } catch (error) {
     console.log('error', error)
   }
@@ -29,20 +35,22 @@ const addConversation = async (req, res) => {
 const getChatList = async (req, res) => {
   const { userId } = req.query
   if (!userId) return errorResponse(res)
-  const chatList = (await redis.getValue('chatList')) || []
-  return successResponse(
-    res,
-    chatList.filter(v => v.senderId === userId)
-  )
+  const conversationMap = (await redis.getValue('conversationMap')) || {}
+  return successResponse(res, conversationMap[userId] || [])
 }
 
 const deleteConversation = async (req, res) => {
-  const { receiverId } = req.query
+  const { senderId, receiverId } = req.query
   if (!receiverId) return errorResponse(res)
-  let chatList = (await redis.getValue('chatList')) || []
-  chatList = chatList.filter(v => v.receiverId !== receiverId)
-  redis.setValue('chatList', chatList)
-  return successResponse(res, chatList)
+  const conversationMap = (await redis.getValue('conversationMap')) || {}
+  let list = conversationMap[senderId]
+  list = list.filter(v => v.receiverId !== receiverId)
+  conversationMap[senderId] = list
+
+  console.log('list', list, senderId, receiverId)
+
+  redis.setValue('conversationMap', conversationMap)
+  return successResponse(res, list)
 }
 
 module.exports = {

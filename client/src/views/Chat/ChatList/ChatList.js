@@ -57,6 +57,7 @@ const ChatList = () => {
             url: '/chat/deleteConversation',
             method: 'delete',
             data: {
+              senderId: v.senderId,
               receiverId: v.receiverId
             }
           })
