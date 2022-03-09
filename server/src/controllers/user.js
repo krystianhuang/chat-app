@@ -42,6 +42,23 @@ const save = async (req, res) => {
   }
 }
 
+const findUsers = async (req, res) => {
+  try {
+    const { username } = req.query
+    const query = {}
+    if (username) {
+      const regex = new RegExp(username, 'i')
+      query.username = { $regex: regex }
+    }
+
+    const friends = await UserServices.get(query)
+    successResponse(res, friends)
+  } catch (error) {
+    console.log('error', error)
+    errorResponse(res)
+  }
+}
+
 const getUserInfo = async (req, res) => {
   try {
     const user = await UserServices.getOne({ _id: req.params.id })
@@ -76,4 +93,11 @@ const getOnlineUsers = (_, res) => {
   successResponse(res, onlineUserList)
 }
 
-module.exports = { login, save, getOnlineUsers, getUserInfo, updateUserInfo }
+module.exports = {
+  login,
+  save,
+  getOnlineUsers,
+  getUserInfo,
+  updateUserInfo,
+  findUsers
+}

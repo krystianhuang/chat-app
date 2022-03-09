@@ -7,5 +7,6 @@ router.post('/login', UserController.login)
 router.get('/onlineUsers', UserController.getOnlineUsers)
 router.get('/userInfo/:id', UserController.getUserInfo)
 router.put('/userInfo', UserController.updateUserInfo)
+router.get('/findUsers', UserController.findUsers)
 
 module.exports = router

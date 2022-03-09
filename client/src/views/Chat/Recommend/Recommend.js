@@ -2,10 +2,10 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import request from '../../../services/request'
 import { getLocal, sort } from '../../../utils'
-import { Skeleton, Card, Avatar, message, Tooltip, Modal } from 'antd'
-import { PlusOutlined, WechatOutlined, CloseOutlined } from '@ant-design/icons'
+import { Skeleton, Card, Avatar, message, Modal } from 'antd'
 import { UserContext } from '../../../App'
 import { ChatContext, eventEmitter } from '../'
+import UserItem from '../UserItem/UserItem'
 import './recommend.scss'
 
 const { Meta } = Card
@@ -118,31 +118,13 @@ const RecommendList = () => {
           {users.length ? (
             <div className='recommend-list'>
               {users.map(user => (
-                <Card
-                  className='item'
+                <UserItem
                   key={user._id}
-                  style={{ width: 300, marginTop: 16 }}
-                  actions={[
-                    <WechatOutlined key='chat' onClick={() => goChat(user)} />,
-
-                    <Tooltip key='dislike' content='Not interested'>
-                      <CloseOutlined onClick={() => disLike(user)} />
-                    </Tooltip>,
-
-                    <PlusOutlined key='edit' onClick={() => addFriend(user)} />
-                  ]}
-                >
-                  <Meta
-                    avatar={<Avatar src={user.avatar} />}
-                    title={user.username}
-                    description={
-                      <div>
-                        <div>description: {user.description}</div>
-                        <div>hobby: {user.hobby}</div>
-                      </div>
-                    }
-                  />
-                </Card>
+                  user={user}
+                  goChat={goChat}
+                  disLike={disLike}
+                  addFriend={addFriend}
+                />
               ))}
             </div>
           ) : (
