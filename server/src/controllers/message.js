@@ -1,6 +1,33 @@
 const { ERROR_MSG } = require('../constants/constants')
 const Message = require('../services/message')
 const { successResponse, errorResponse } = require('../utils/util')
+const redis = require('../modules/redis')
+
+const createTempMessages = async (req, res) => {
+  if (!req.body.message) {
+    errorResponse(res)
+    return
+  }
+  const messages = (await redis.getValue('tempMessages')) || []
+  await redis.setValue('tempMessages', [
+    ...messages,
+    {
+      ...req.body.message,
+      createTime: Math.round(+new Date().getTime() / 1000)
+    }
+  ])
+  successResponse(res, true)
+}
+
+const getTempMessages = async (req, res) => {
+  const { roomId } = req.query
+
+  const messages = (await redis.getValue('tempMessages')) || []
+  successResponse(
+    res,
+    messages.filter(v => v.roomId === roomId)
+  )
+}
 
 const insetMessages = async messages => {
   const [data] = await Message.createMany(messages)
@@ -36,6 +63,8 @@ const deleteMessage = async (req, res) => {
 }
 
 module.exports = {
+  createTempMessages,
+  getTempMessages,
   insetMessages,
   getRecentMessages,
   deleteMessage

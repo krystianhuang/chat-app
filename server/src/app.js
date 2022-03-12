@@ -8,6 +8,7 @@ const { PORT } = require('./constants/constants')
 const { createSocket } = require('./modules/socket')
 const path = require('path')
 const useMiddleware = require('./middleware')
+const { scheduleJob } = require('./modules/schedule')
 // const Redis = require('./modules/redis')
 
 const app = express()
@@ -28,6 +29,7 @@ app.use('/imgs', express.static(path.join(__dirname, 'imgs')))
 
 useMiddleware(app)
 routes(app)
+scheduleJob()
 
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost/${PORT}`)

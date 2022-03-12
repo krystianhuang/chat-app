@@ -52,26 +52,40 @@ const ChatWindow = () => {
         }
       })
       setIsFriend(res.data)
-    } catch (error) {}
+      return res.data
+    } catch (error) {
+      return false
+    }
   }, [])
 
   const getMsgList = useCallback(async () => {
     setLoading(true)
-    await getIsFriend()
-    const res = await request({
-      url: '/message/recent',
-      data: {
-        roomId,
-        page: 1,
-        pageSize: 100
-      }
-    })
-    setMsgList(res.data)
+    const isFriend = await getIsFriend()
+    if (isFriend) {
+      const res = await request({
+        url: '/message/recent',
+        data: {
+          roomId,
+          page: 1,
+          pageSize: 100
+        }
+      })
+      setMsgList(res.data)
+    } else {
+      const res = await request({
+        url: '/message/getTempMessages',
+        data: {
+          roomId
+        }
+      })
+      setMsgList(res.data)
+    }
+
     autoScroll()
     setLoading(false)
   }, [roomId])
 
-  const sendMessage = msg => {
+  const sendMessage = async msg => {
     const message = {
       roomId,
       senderId: user.id,
@@ -80,7 +94,19 @@ const ChatWindow = () => {
       message: msg.message,
       messageType: msg.messageType
     }
-    socket.emit('sendMessage', message)
+
+    if (isFriend) {
+      socket.emit('sendMessage', message)
+    } else {
+      await request({
+        url: '/message/createTempMessages',
+        method: 'post',
+        data: {
+          message
+        }
+      })
+    }
+
     return message
   }
 
@@ -121,7 +147,7 @@ const ChatWindow = () => {
       }
     }
 
-    const msg = sendMessage(message)
+    const msg = await sendMessage(message)
     setChatMsg('')
     setUploadInfo({})
     setMsgList([...msgList, msg])
