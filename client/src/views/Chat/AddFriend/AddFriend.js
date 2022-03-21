@@ -38,9 +38,7 @@ const AddFriend = () => {
   return (
     <div className='add-friend-wrapper'>
       <h2 className='title'>Add Friend</h2>
-      <div className='desc'>
-        You can add a friend with their Discord Tag. It's cAsE sEnSitIvE!
-      </div>
+      <div className='desc'>You can add a friend with their UserName!</div>
       <Input
         value={val}
         placeholder='Enter a Username'

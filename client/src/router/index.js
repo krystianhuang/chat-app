@@ -4,6 +4,7 @@ import Home from '../views/Home'
 import { Routes, Route } from 'react-router-dom'
 import Chat from '../views/Chat'
 import User from '../views/User'
+import Admin from '../views/Admin'
 
 const Router = () => {
   return (
@@ -13,6 +14,7 @@ const Router = () => {
       <Route path='/home' element={<Home />} />
       <Route path='/chat' element={<Chat />} />
       <Route path='/user/:id' element={<User />} />
+      <Route path='/admin' element={<Admin />} />
     </Routes>
   )
 }

@@ -8,5 +8,8 @@ router.get('/onlineUsers', UserController.getOnlineUsers)
 router.get('/userInfo/:id', UserController.getUserInfo)
 router.put('/userInfo', UserController.updateUserInfo)
 router.get('/findUsers', UserController.findUsers)
+router.post('/report', UserController.reportUser)
+router.get('/reportedList', UserController.getReportedList)
+router.put('/disable', UserController.disableUser)
 
 module.exports = router

@@ -1,6 +1,8 @@
 const { errorResponse, successResponse } = require('../utils/util')
 const { SUCCESS_MSG, ERROR_MSG } = require('../constants/constants')
 const UserServices = require('../services/user')
+const ReportServices = require('../services/report')
+
 const { createToken, parseToken } = require('../utils/auth')
 const { onlineUserList } = require('../modules/socket')
 
@@ -93,11 +95,46 @@ const getOnlineUsers = (_, res) => {
   successResponse(res, onlineUserList)
 }
 
+const reportUser = async (req, res) => {
+  try {
+    await ReportServices.create(req.body.reportInfo)
+    successResponse(res, true)
+  } catch (error) {
+    errorResponse(res)
+  }
+}
+
+const getReportedList = async (req, res) => {
+  try {
+    const result = await ReportServices.getAll()
+    successResponse(res, result)
+  } catch (error) {
+    console.log('error', error)
+    errorResponse(res)
+  }
+}
+
+const disableUser = async (req, res) => {
+  try {
+    const { user } = req.body
+    console.log('user', user)
+    await UserServices.update({ userId: user.userId, status: 1 })
+    await ReportServices.remove({ _id: user._id })
+    successResponse(res, true)
+  } catch (error) {
+    console.log('error', error)
+    errorResponse(res)
+  }
+}
+
 module.exports = {
   login,
   save,
   getOnlineUsers,
   getUserInfo,
   updateUserInfo,
-  findUsers
+  findUsers,
+  reportUser,
+  getReportedList,
+  disableUser
 }

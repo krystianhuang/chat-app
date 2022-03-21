@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { Picker } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 
 const EmojiPicker = ({ choiceEmoji }) => {
+  console.log('choiceEmoji', choiceEmoji)
+
   return (
     <Picker
       style={{

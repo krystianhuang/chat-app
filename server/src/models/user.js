@@ -20,6 +20,20 @@ const Userschema = new Monggose.Schema({
   },
   birthday: Number,
   description: String,
+  /**
+   * 0: user , 1: admin
+   */
+  role: {
+    type: Number,
+    default: 0
+  },
+  /**
+   * 0: noraml , 1: disabled
+   */
+  status: {
+    type: Number,
+    default: 0
+  },
   createDate: {
     type: Date,
     default: Date.now

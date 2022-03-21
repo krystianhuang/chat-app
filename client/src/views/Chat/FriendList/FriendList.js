@@ -1,11 +1,12 @@
 import { Tooltip, Menu, Dropdown, Modal } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../../App'
 import request from '../../../services/request'
 import { sort } from '../../../utils'
 import { ChatContext, eventEmitter } from '../index'
+import ReportModal from './ReportModal/ReportModal'
 import './friendList.scss'
 
 const Friends = ({ friends, setFriends }) => {
@@ -15,6 +16,9 @@ const Friends = ({ friends, setFriends }) => {
     useContext(ChatContext)
 
   const { user } = useContext(UserContext)
+
+  const [showReport, setShowReport] = useState(false)
+  const [reportUser, setReportUser] = useState({})
 
   const onFriendClick = async v => {
     const roomId = sort(user.id, v.id)
@@ -55,10 +59,20 @@ const Friends = ({ friends, setFriends }) => {
           setFriends(friends.filter(f => f.id !== v.id))
         }
       })
+      return
+    }
+
+    if (e.key === 'report') {
+      setShowReport(true)
+      setReportUser(v)
     }
   }
 
   const isOnline = useMemo(() => v => onlineUsers[v.id], [onlineUsers])
+
+  const hideReportModal = useCallback(() => {
+    setShowReport(false)
+  }, [])
 
   return (
     <div className='friend-list'>
@@ -94,6 +108,7 @@ const Friends = ({ friends, setFriends }) => {
               overlay={
                 <Menu onClick={e => onMenuClick(e, v)}>
                   <Menu.Item key='delete'>Remove Friend</Menu.Item>
+                  <Menu.Item key='report'>Report Friend</Menu.Item>
                 </Menu>
               }
               trigger={['click']}
@@ -106,6 +121,12 @@ const Friends = ({ friends, setFriends }) => {
           </div>
         </div>
       ))}
+
+      <ReportModal
+        user={reportUser}
+        visible={showReport}
+        hidden={hideReportModal}
+      />
     </div>
   )
 }

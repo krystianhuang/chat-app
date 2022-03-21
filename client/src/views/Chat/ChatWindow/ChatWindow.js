@@ -13,6 +13,7 @@ import EmojiPicker from './EmojiPicker/EmojiPicker'
 import UploadImg from './UploadImg/UploadImg'
 import { onUploadImg } from './util'
 import { MSG_SPLIT_STR } from '../../../constants/constants'
+import useClickOther from './useClickOther'
 import './chatWindow.scss'
 
 const autoScroll = () => {
@@ -34,6 +35,7 @@ const ChatWindow = () => {
   const uploadRef = useRef()
   const [uploadInfo, setUploadInfo] = useState({})
   const [isFriend, setIsFriend] = useState(true)
+  const emojiRef = useRef()
 
   useEffect(() => {
     socket.on('receiverMessage', msg => {
@@ -170,6 +172,11 @@ const ChatWindow = () => {
     setRoomId('')
   }
 
+  useClickOther(emojiRef, () => {
+    console.log('??')
+    setShowEmoji(false)
+  })
+
   return (
     <div className='chat-window'>
       <div className='chat-top-banner'>
@@ -205,7 +212,11 @@ const ChatWindow = () => {
           onClick={() => setShowEmoji(true)}
         />
 
-        {showEmoji ? <EmojiPicker choiceEmoji={choiceEmoji} /> : null}
+        {showEmoji ? (
+          <div ref={emojiRef}>
+            <EmojiPicker choiceEmoji={choiceEmoji} />
+          </div>
+        ) : null}
       </div>
     </div>
   )

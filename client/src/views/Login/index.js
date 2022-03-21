@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import request from '../../services/request'
 import { setLocal } from '../../utils'
 import { UserContext } from '../../App'
+import { ROLE } from '../../constants/constants'
 import './index.scss'
 
 const Login = () => {
@@ -30,11 +31,16 @@ const Login = () => {
         avatar: data.avatar,
         hobby: data.hobby,
         sex: data.sex,
+        role: data.role,
         description: data.description
       }
       setUserInfo(user)
       setLocal('user', user)
-      history('/chat')
+      if (data.role === ROLE.ADMIN) {
+        history('/admin')
+      } else {
+        history('/chat')
+      }
     } catch (error) {
       message.error('Login fail' + error?.data)
     }
