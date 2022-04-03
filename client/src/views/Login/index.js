@@ -42,7 +42,7 @@ const Login = () => {
         history('/chat')
       }
     } catch (error) {
-      message.error('Login fail' + error?.data)
+      message.error('Login fail:' + error?.data?.msg)
     }
   }
 

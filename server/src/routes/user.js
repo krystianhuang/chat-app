@@ -11,5 +11,6 @@ router.get('/findUsers', UserController.findUsers)
 router.post('/report', UserController.reportUser)
 router.get('/reportedList', UserController.getReportedList)
 router.put('/disable', UserController.disableUser)
+router.put('/noPassReport', UserController.noPassReport)
 
 module.exports = router

@@ -26,8 +26,15 @@ const Admin = () => {
         data: { user: v }
       })
       getList()
-      console.log('res', res)
+      return
     }
+
+    await request({
+      url: '/user/noPassReport',
+      method: 'put',
+      data: { user: v }
+    })
+    getList()
   }
 
   return (
@@ -54,10 +61,12 @@ const Admin = () => {
           align='center'
           render={v => (
             <div>
-              <Button onClick={() => onClick(v, 'pass')} type='link'>
+              <Button onClick={() => onClick(v, 'pass')} danger type='link'>
                 Pass
               </Button>
-              <Button type='link'>No Pass</Button>
+              <Button onClick={() => onClick(v)} type='link'>
+                No Pass
+              </Button>
             </div>
           )}
         />

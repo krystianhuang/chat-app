@@ -1,5 +1,5 @@
 const { errorResponse, successResponse } = require('../utils/util')
-const { ERROR_MSG, USER_STATUS } = require('../constants/constants')
+const { ERROR_MSG } = require('../constants/constants')
 const FriendServices = require('../services/friend')
 const UserServices = require('../services/user')
 const { objectIdToId } = require('../utils/mongoose')
@@ -104,9 +104,24 @@ const getRecommendFriends = async (req, res) => {
 
   const friends = await FriendServices.get({ senderId: userId })
   const recommends = []
-  const users = await UserServices.get({
-    _id: { $ne: userId },
-    hobby: { $regex: regex }
+  const allUsers = await UserServices.get({
+    _id: { $ne: userId }
+    // hobby: { $regex: regex }
+  })
+
+  const isIncludes = (o, v) => {
+    if (!o) return false
+    return o.split(',').some(s => v.includes(s))
+  }
+
+  const users = allUsers.filter(user => {
+    if (
+      (user.hobby && isIncludes(hobby, user.hobby)) ||
+      isIncludes(user.hobby, hobby)
+    ) {
+      return true
+    }
+    return false
   })
 
   const disLikeUsers = (await redis.getValue('disLikeUsers')) || []

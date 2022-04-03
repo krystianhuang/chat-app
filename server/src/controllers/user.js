@@ -1,5 +1,9 @@
 const { errorResponse, successResponse } = require('../utils/util')
-const { SUCCESS_MSG, ERROR_MSG } = require('../constants/constants')
+const {
+  SUCCESS_MSG,
+  ERROR_MSG,
+  USER_STATUS
+} = require('../constants/constants')
 const UserServices = require('../services/user')
 const ReportServices = require('../services/report')
 
@@ -18,11 +22,17 @@ const login = async (req, res) => {
     errorResponse(res, ERROR_MSG.USER_DOSE_NOT_EXIST)
     return
   }
+
   if (user.password !== password) {
     errorResponse(res, ERROR_MSG.PASSWORD_ERROR)
-
     return
   }
+
+  if (user.status === USER_STATUS.DISABLED) {
+    errorResponse(res, ERROR_MSG.DISABLED)
+    return
+  }
+
   const token = createToken(user._id)
   successResponse(res, { ...user._doc, token }, SUCCESS_MSG.LOGIN_SUCCESSFUL)
 }
@@ -117,12 +127,20 @@ const getReportedList = async (req, res) => {
 const disableUser = async (req, res) => {
   try {
     const { user } = req.body
-    console.log('user', user)
     await UserServices.update({ userId: user.userId, status: 1 })
     await ReportServices.remove({ _id: user._id })
     successResponse(res, true)
   } catch (error) {
-    console.log('error', error)
+    errorResponse(res)
+  }
+}
+
+const noPassReport = async (req, res) => {
+  try {
+    const { user } = req.body
+    await ReportServices.remove({ _id: user._id })
+    successResponse(res, true)
+  } catch (error) {
     errorResponse(res)
   }
 }
@@ -136,5 +154,6 @@ module.exports = {
   findUsers,
   reportUser,
   getReportedList,
-  disableUser
+  disableUser,
+  noPassReport
 }
