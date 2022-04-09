@@ -2,6 +2,7 @@ const { ERROR_MSG } = require('../constants/constants')
 const Message = require('../services/message')
 const { successResponse, errorResponse } = require('../utils/util')
 const redis = require('../modules/redis')
+const { toMongoId } = require('../utils/mongoose')
 
 const createTempMessages = async (req, res) => {
   if (!req.body.message) {
@@ -40,8 +41,9 @@ const getRecentMessages = async (req, res) => {
   const pageSize = Number(req.query.pageSize)
   try {
     const data = await Message.get({ roomId })
-      .skip(page * pageSize)
-      .limit(pageSize)
+    // .skip(page * pageSize)
+    // .limit(pageSize)
+    console.log('getRecentMessages', data)
     successResponse(res, data)
   } catch (error) {
     errorResponse(res, error)
@@ -62,10 +64,37 @@ const deleteMessage = async (req, res) => {
   }
 }
 
+const getMessagesCount = async (req, res) => {
+  const { list, status } = req.body
+
+  const countObject = {}
+
+  for (let index = 0; index < list.length; index++) {
+    const message = list[index]
+    console.log('message', message)
+    const result = await Message.getCount({
+      roomId: message.roomId,
+      senderId: message.senderId,
+      status: status
+    })
+    countObject[message.roomId] = result
+  }
+
+  successResponse(res, countObject)
+}
+
+const updateMessagesStatus = async (req, res) => {
+  const { roomId, status } = req.body
+  const result = await Message.update({ roomId, status })
+  successResponse(res, result)
+}
+
 module.exports = {
   createTempMessages,
   getTempMessages,
   insetMessages,
   getRecentMessages,
-  deleteMessage
+  deleteMessage,
+  getMessagesCount,
+  updateMessagesStatus
 }

@@ -6,15 +6,18 @@ const { objectIdToId } = require('../utils/mongoose')
 const redis = require('../modules/redis')
 
 const friendAdapter = list => {
-  return list.map(({ receiverId }) => {
-    return {
-      id: receiverId._id,
-      username: receiverId.username,
-      avatar: receiverId.avatar,
-      createDate: receiverId.createDate,
-      updateDate: receiverId.updateDate
-    }
-  })
+  return list
+    .map(({ receiverId }) => {
+      if (!receiverId) return null
+      return {
+        id: receiverId._id,
+        username: receiverId.username,
+        avatar: receiverId.avatar,
+        createDate: receiverId.createDate,
+        updateDate: receiverId.updateDate
+      }
+    })
+    .filter(v => v)
 }
 
 const getFriends = async id => {
@@ -24,13 +27,18 @@ const getFriends = async id => {
 
 const getFriendList = async (req, res) => {
   const { selfId } = req.query
+
   if (!selfId) {
     errorResponse(res, ERROR_MSG.USER_DOSE_NOT_EXIST)
     return
   }
 
-  const friends = await getFriends(selfId)
-  successResponse(res, friends)
+  try {
+    const friends = await getFriends(selfId)
+    successResponse(res, friends)
+  } catch (error) {
+    errorResponse(res)
+  }
 }
 
 const addFriend = async (req, res) => {
@@ -124,20 +132,28 @@ const getRecommendFriends = async (req, res) => {
     return false
   })
 
-  const disLikeUsers = (await redis.getValue('disLikeUsers')) || []
+  console.log('fir', friends)
 
-  users.forEach(u => {
-    if (
-      !friends.find(
-        f => objectIdToId(f.receiverId._id) === objectIdToId(u._id)
-      ) &&
-      !(disLikeUsers[userId] || []).includes(objectIdToId(u._id))
-    ) {
-      recommends.push(u)
-    }
-  })
+  try {
+    const disLikeUsers = (await redis.getValue('disLikeUsers')) || []
 
-  successResponse(res, recommends)
+    users.forEach(u => {
+      if (
+        !friends.find(f =>
+          f.receiverId
+            ? objectIdToId(f.receiverId._id) === objectIdToId(u._id)
+            : false
+        ) &&
+        !(disLikeUsers[userId] || []).includes(objectIdToId(u._id))
+      ) {
+        recommends.push(u)
+      }
+    })
+    successResponse(res, recommends)
+  } catch (error) {
+    console.log('recommend error', error)
+    errorResponse(res)
+  }
 }
 
 const notInterested = async (req, res) => {

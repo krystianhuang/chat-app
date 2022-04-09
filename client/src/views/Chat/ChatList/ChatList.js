@@ -1,12 +1,13 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { CloseOutlined } from '@ant-design/icons'
-import { message, Modal, Tooltip } from 'antd'
+import { message, Modal, Tooltip, Badge } from 'antd'
 import { UserContext } from '../../../App'
 import request from '../../../services/request'
 import { getLocal, sort } from '../../../utils'
 import { ChatContext } from '../index'
 import { eventEmitter } from '../index'
 import { useNavigate } from 'react-router-dom'
+import { paramsTransform } from './util'
 import './chatList.scss'
 
 const ChatList = () => {
@@ -17,6 +18,19 @@ const ChatList = () => {
   const { user } = useContext(UserContext)
 
   const [chatList, setChatList] = useState([])
+  const [messagesCount, setMessagesCount] = useState({})
+
+  const getMessagesCount = useCallback(async list => {
+    const res = await request({
+      url: '/message/count',
+      method: 'post',
+      data: {
+        list,
+        status: 0
+      }
+    })
+    setMessagesCount(res.data)
+  }, [])
 
   const getChatList = useCallback(async () => {
     const result = await request({
@@ -25,13 +39,15 @@ const ChatList = () => {
         userId: getLocal('user')?.id
       }
     })
+    const { list } = paramsTransform(result.data)
+    getMessagesCount(list)
     setChatList(result.data)
   }, [])
 
   useEffect(() => {
     getChatList()
     eventEmitter.on('getChatList', getChatList)
-  }, [getChatList])
+  }, [getChatList, getMessagesCount])
 
   const onFriendClick = v => {
     const roomId = sort(user.id, v.receiverId)
@@ -72,6 +88,20 @@ const ChatList = () => {
 
   const isOnline = useMemo(() => v => onlineUsers[v.receiverId], [onlineUsers])
 
+  const remderAvatar = v => {
+    return (
+      <img
+        className='avatar-img'
+        src={v.receiverAvatar}
+        alt=''
+        onClick={e => {
+          e.stopPropagation()
+          history(`/user/${v.receiverId}`)
+        }}
+      />
+    )
+  }
+
   return (
     <div className='chat-list'>
       <div className='title'>CONVERSATION LIST</div>
@@ -82,15 +112,12 @@ const ChatList = () => {
           className='chat-item'
           key={v.receiverId}
         >
-          <img
-            className='avatar-img'
-            src={v.receiverAvatar}
-            alt=''
-            onClick={e => {
-              e.stopPropagation()
-              history(`/user/${v.receiverId}`)
-            }}
-          />
+          {messagesCount[v.roomId] ? (
+            <Badge count={messagesCount[v.roomId]}>{remderAvatar(v)}</Badge>
+          ) : (
+            remderAvatar(v)
+          )}
+
           <span className='user-name'>{v.receiverName}</span>
           <Tooltip title={isOnline(v) ? 'Online' : 'Offline'}>
             <span

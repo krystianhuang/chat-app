@@ -57,7 +57,6 @@ const createSocket = () => {
       await socket.join(roomId)
       conversationList[roomId] = socket.id
       socketIo.in(roomId).emit('conversationList', conversationList)
-      console.log('conversationList', conversationList)
     })
 
     socket.on('sendMessage', async message => {

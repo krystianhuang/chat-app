@@ -14,6 +14,7 @@ import UploadImg from './UploadImg/UploadImg'
 import { onUploadImg } from './util'
 import { MSG_SPLIT_STR } from '../../../constants/constants'
 import useClickOther from './useClickOther'
+import { eventEmitter } from '../index'
 import './chatWindow.scss'
 
 const autoScroll = () => {
@@ -58,11 +59,13 @@ const ChatWindow = () => {
     } catch (error) {
       return false
     }
-  }, [])
+  }, [currentChatFriend])
 
   const getMsgList = useCallback(async () => {
     setLoading(true)
     const isFriend = await getIsFriend()
+    console.log('isFriend', isFriend)
+    let list = []
     if (isFriend) {
       const res = await request({
         url: '/message/recent',
@@ -72,7 +75,7 @@ const ChatWindow = () => {
           pageSize: 100
         }
       })
-      setMsgList(res.data)
+      list = res.data
     } else {
       const res = await request({
         url: '/message/getTempMessages',
@@ -80,11 +83,14 @@ const ChatWindow = () => {
           roomId
         }
       })
-      setMsgList(res.data)
+      list = res.data
     }
 
+    setMsgList(list)
     autoScroll()
     setLoading(false)
+
+    return list
   }, [roomId])
 
   const sendMessage = async msg => {
@@ -118,8 +124,23 @@ const ChatWindow = () => {
   }
 
   useEffect(() => {
-    getMsgList()
-  }, [getMsgList])
+    const query = async () => {
+      const list = await getMsgList()
+      if (list.length) {
+        await request({
+          url: '/message',
+          method: 'put',
+          data: {
+            roomId,
+            status: 1
+          }
+        })
+        eventEmitter.emit('getChatList')
+      }
+    }
+
+    query()
+  }, [roomId, getMsgList])
 
   const onSend = async () => {
     // if (!isFriend) {
@@ -173,7 +194,6 @@ const ChatWindow = () => {
   }
 
   useClickOther(emojiRef, () => {
-    console.log('??')
     setShowEmoji(false)
   })
 

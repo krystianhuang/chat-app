@@ -10,6 +10,12 @@ const addConversation = async (req, res) => {
     }
     let conversationMap = (await redis.getValue('conversationMap')) || {}
     const nowTime = Math.round(new Date().getTime() / 1000)
+    console.log(
+      'params.senderI',
+      params.senderId,
+      conversationMap[params.senderId]
+    )
+
     if (conversationMap[params.senderId]) {
       // if have not record
       if (

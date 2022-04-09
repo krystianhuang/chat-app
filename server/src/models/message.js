@@ -10,6 +10,13 @@ const MessageSchema = new Mongoose.Schema({
   senderAvatar: String,
   message: String,
   messageType: String,
+  /**
+   * 0: unRead, 1: readed
+   */
+  status: {
+    type: Number,
+    default: 0
+  },
   time: {
     type: Date,
     default: Date.now

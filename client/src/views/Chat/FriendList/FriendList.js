@@ -20,6 +20,14 @@ const Friends = ({ friends, setFriends }) => {
   const [showReport, setShowReport] = useState(false)
   const [reportUser, setReportUser] = useState({})
 
+  const addConversation = async data => {
+    await request({
+      url: '/chat/addConversation',
+      method: 'post',
+      data
+    })
+  }
+
   const onFriendClick = async v => {
     const roomId = sort(user.id, v.id)
     socket.emit('join', {
@@ -27,16 +35,19 @@ const Friends = ({ friends, setFriends }) => {
     })
     setRoomId(roomId)
     setCurrentChatFriend(v)
-    await request({
-      url: '/chat/addConversation',
-      method: 'post',
-      data: {
-        senderId: user.id,
-        receiverId: v.id,
-        receiverAvatar: v.avatar,
-        receiverName: v.username,
-        roomId: sort(user.id, v.id)
-      }
+    await addConversation({
+      senderId: user.id,
+      receiverId: v.id,
+      receiverAvatar: v.avatar,
+      receiverName: v.username,
+      roomId: sort(user.id, v.id)
+    })
+    addConversation({
+      senderId: v.id,
+      receiverId: user.id,
+      receiverAvatar: user.avatar,
+      receiverName: user.username,
+      roomId: sort(user.id, v.id)
     })
     eventEmitter.emit('getChatList')
   }
