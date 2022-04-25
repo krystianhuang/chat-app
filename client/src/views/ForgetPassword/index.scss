@@ -1,0 +1,54 @@
+.forget-form-wrapper {
+  background-image: url('http://localhost:3001/imgs/bg.jpg');
+  background-size: 100% 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: 100%;
+
+  .forget-container {
+    background-color: #fff;
+    padding: 40px 20px 0 20px;
+    position: relative;
+
+    .avatar-img {
+      width: 100px;
+      position: absolute;
+      display: block;
+      height: 100px;
+      top: -60px;
+      border-radius: 50%;
+    }
+
+    .form-item{
+      .ant-form-item-control-input-content{
+        display: flex;
+
+      }
+    }
+
+    .code-btn{
+      margin-left: 8px;
+    }
+  }
+
+  .title {
+    font-size: 18px;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .forget-form {
+    min-width: 400px;
+  }
+
+  .forget-form-button {
+    margin-right: 8px;
+  }
+
+  .hidden {
+    display: none;
+  }
+}

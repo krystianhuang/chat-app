@@ -5,12 +5,14 @@ import { Routes, Route } from 'react-router-dom'
 import Chat from '../views/Chat'
 import User from '../views/User'
 import Admin from '../views/Admin'
+import ForgetPassword from '../views/ForgetPassword'
 
 const Router = () => {
   return (
     <Routes>
       <Route path='/register' element={<Register />} />
       <Route path='/login' element={<Login />} />
+      <Route path='/forgetPassword' element={<ForgetPassword />} />
       <Route path='/home' element={<Home />} />
       <Route path='/chat' element={<Chat />} />
       <Route path='/user/:id' element={<User />} />

@@ -47,7 +47,7 @@ const AddFriend = () => {
         size='large'
         addonAfter={
           <Button onClick={onQuery} disabled={!val} type='primary'>
-            Send Friend Request
+            Search
           </Button>
         }
       />

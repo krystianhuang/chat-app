@@ -46,6 +46,13 @@ const Login = () => {
     }
   }
 
+  const forgetPassword = async () => {
+    request({
+      url: '/user/forgetPassword',
+      method: 'post'
+    })
+  }
+
   return (
     <div className='login-form-wrapper'>
       <div className='login-container'>
@@ -92,8 +99,14 @@ const Login = () => {
               Login
             </Button>
             <span>
-              Or <Link to='/register'>Register</Link>
+              / <Link to='/register'>Register</Link>
             </span>
+          </Form.Item>
+
+          <Form.Item>
+            <Button type='link'>
+              <Link to='/forgetPassword'>Forget Password</Link>
+            </Button>
           </Form.Item>
         </Form>
       </div>

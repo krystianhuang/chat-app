@@ -1,6 +1,11 @@
 import React, { useState, useRef } from 'react'
 import { Form, Input, Button, message, Radio } from 'antd'
-import { UserOutlined, LockOutlined, HeartOutlined } from '@ant-design/icons'
+import {
+  UserOutlined,
+  LockOutlined,
+  HeartOutlined,
+  MailOutlined
+} from '@ant-design/icons'
 import request from '../../services/request'
 import { Link, useNavigate } from 'react-router-dom'
 import { toBase64 } from './../../utils/index'
@@ -110,6 +115,21 @@ const Register = () => {
             />
           </Form.Item>
 
+          <Form.Item
+            name='email'
+            rules={[
+              {
+                required: true,
+                message: 'Please input your email!'
+              }
+            ]}
+          >
+            <Input
+              prefix={<MailOutlined className='site-form-item-icon' />}
+              placeholder='Email'
+            />
+          </Form.Item>
+
           <Form.Item name='hobby'>
             <Input
               prefix={<HeartOutlined />}
@@ -126,7 +146,7 @@ const Register = () => {
               Register
             </Button>
             <span>
-              Or <Link to='/login'>Log in</Link>
+              / <Link to='/login'>Log in</Link>
             </span>
           </Form.Item>
         </Form>

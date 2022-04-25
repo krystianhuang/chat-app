@@ -28,7 +28,7 @@ const request = async ({ url, headers, data, method = 'get' }) => {
       options.headers.authorization = token
     }
 
-    const res = await axios(options)
+    const res = await axios({ ...options, withCredentials: true })
     if (res.data.code === 0) {
       return Promise.resolve(res.data)
     } else {
