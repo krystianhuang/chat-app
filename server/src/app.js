@@ -10,9 +10,16 @@ const path = require('path')
 const useMiddleware = require('./middleware')
 const { scheduleJob } = require('./modules/schedule')
 // const Redis = require('./modules/redis')
+const session = require('express-session')
 
 const app = express()
-app.use(cors())
+app.use(
+  cors({
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    credentials: true
+  })
+)
+
 const http = require('http').createServer(app)
 mongoose.connect(DB_CONFIG.url)
 
@@ -21,6 +28,13 @@ createSocket(http)
 // const redis = new Redis()
 // exports.redis = redis
 
+app.use(
+  session({
+    secret: 'chat-session',
+    name: 'cSession',
+    resave: false
+  })
+)
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }))

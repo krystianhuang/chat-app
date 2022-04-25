@@ -29,7 +29,9 @@ const DEFAULT_MESSAGE = {
 const WHITE_ROUTES = [
   '/api/user/login',
   '/api/user/register',
-  '/api/upload/file'
+  '/api/upload/file',
+  '/api/user/resetPassword',
+  '/api/user/getVerCode'
 ]
 
 const VALIDATE_MESSAGE_STATUS = {

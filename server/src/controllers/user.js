@@ -9,8 +9,12 @@ const ReportServices = require('../services/report')
 
 const { createToken, parseToken } = require('../utils/auth')
 const { onlineUserList } = require('../modules/socket')
+const getVerificationCode = require('../utils/verCode')
+const sendVerificationCode = require('../utils/nodemailer')
 
 const login = async (req, res) => {
+  console.log('session', req.session)
+
   if (!req.body.username || !req.body.password) {
     errorResponse(res)
     return
@@ -145,6 +149,36 @@ const noPassReport = async (req, res) => {
   }
 }
 
+const getVerCode = async (req, res) => {
+  try {
+    const codeOption = getVerificationCode()
+    await sendVerificationCode(req.body.email, codeOption.code)
+    req.session.codeOption = codeOption
+
+    successResponse(res, true)
+  } catch (error) {}
+}
+
+const resetPassword = async (req, res) => {
+  const { email, code, password } = req.body
+  const { codeOption = {} } = req.session
+  if (code !== codeOption.code) {
+    return errorResponse(res, 'Verification code is error')
+  }
+
+  try {
+    const user = await UserServices.getOne({ email })
+    if (!user) {
+      return errorResponse(res)
+    }
+    const newUser = await UserServices.update({ userId: user._id, password })
+    successResponse(res, newUser)
+  } catch (error) {
+    console.log('error', error)
+    errorResponse(res)
+  }
+}
+
 module.exports = {
   login,
   save,
@@ -155,5 +189,7 @@ module.exports = {
   reportUser,
   getReportedList,
   disableUser,
-  noPassReport
+  noPassReport,
+  getVerCode,
+  resetPassword
 }
