@@ -1,4 +1,4 @@
-import { Table, Button } from 'antd'
+import { Table, Button, Avatar } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import request from '../../services/request'
 
@@ -45,6 +45,7 @@ const Admin = () => {
         <Column title='Reporter' dataIndex='reportName' align='center' />
         <Column title='Username' dataIndex='name' align='center' />
         <Column
+          width={500}
           title={<div style={{ textAlign: 'center' }}>Reason</div>}
           dataIndex='reason'
         />
@@ -53,7 +54,7 @@ const Admin = () => {
           title='Avatar'
           align='center'
           dataIndex='avatar'
-          render={v => <img src={v} alt='avatar' style={{ maxWidth: 240 }} />}
+          render={v => <Avatar src={v} />}
         />
 
         <Column

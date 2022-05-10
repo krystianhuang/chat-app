@@ -7,6 +7,7 @@ import './reportModal.scss'
 const ReportModal = ({ user, visible, hidden }) => {
   const { user: currentUser } = useContext(UserContext)
 
+  const [type, setType] = useState('')
   const [val, setVal] = useState('')
 
   const onCancel = () => {
@@ -41,6 +42,7 @@ const ReportModal = ({ user, visible, hidden }) => {
     >
       <Radio.Group
         onChange={e => {
+          setType(e.target.value)
           setVal(e.target.value)
         }}
       >
@@ -58,9 +60,9 @@ const ReportModal = ({ user, visible, hidden }) => {
         </Radio>
       </Radio.Group>
 
-      {val === 'other' ? (
+      {type === 'other' ? (
         <div className='input'>
-          <Input />
+          <Input onChange={e => setVal(e.target.value)} />
         </div>
       ) : null}
     </Modal>

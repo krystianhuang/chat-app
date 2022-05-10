@@ -1,4 +1,4 @@
-import { Card, Avatar, Tooltip } from 'antd'
+import { Card, Avatar, Tooltip, Popover } from 'antd'
 import { PlusOutlined, WechatOutlined, CloseOutlined } from '@ant-design/icons'
 import './userItem.scss'
 
@@ -28,8 +28,17 @@ const UserItem = ({ user, goChat, disLike, addFriend }) => {
         title={user.username}
         description={
           <div>
-            <div>description: {user.description}</div>
-            <div>hobby: {user.hobby}</div>
+            <Popover content={user.description}>
+              <div className='text'>
+                <span className='label'>Description:</span> {user.description}
+              </div>
+            </Popover>
+
+            <Popover content={user.hobby}>
+              <div className='text'>
+                <span className='label'>Hobby:</span> {user.hobby}
+              </div>
+            </Popover>
           </div>
         }
       />

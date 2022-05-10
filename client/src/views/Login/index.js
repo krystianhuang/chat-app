@@ -32,6 +32,7 @@ const Login = () => {
         hobby: data.hobby,
         sex: data.sex,
         role: data.role,
+        email: data.email,
         description: data.description
       }
       setUserInfo(user)

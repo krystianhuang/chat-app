@@ -92,12 +92,20 @@ const RecommendList = () => {
       content: 'Are you sure this person is not interested?',
       onOk: async () => {
         try {
-          const res = await request({
+          await request({
             url: '/friend/disLike',
             method: 'put',
             data: {
               userId: user.id,
               disLikeUserId: v._id
+            }
+          })
+          await request({
+            url: '/friend/disLike',
+            method: 'put',
+            data: {
+              userId: v._id,
+              disLikeUserId: user.id
             }
           })
           getRecommendList()

@@ -96,6 +96,7 @@ const UserInfo = () => {
         <img src={userInfo.avatar} className='avatar-img' alt='avatar' />
 
         <div className='right'>
+          <div className='item'>Email Address: {userInfo.email}</div>
           <div className='item'>UserName: {userInfo.username}</div>
           <div className='item'>Sex: {SEX[userInfo.sex]}</div>
           <div className='item'>
@@ -135,6 +136,16 @@ const UserInfo = () => {
               </div>
 
               <div className='right'>
+                <div className='item'>
+                  <span className='label'>Email Address:</span>
+                  <Input
+                    disabled
+                    type='email'
+                    className='input'
+                    value={userInfo.email}
+                  />
+                </div>
+
                 <div className='item'>
                   <span className='label'>Username:</span>
                   <Input

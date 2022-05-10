@@ -4,7 +4,7 @@ const MessageSchema = new Mongoose.Schema({
   reportName: String,
   userId: String,
   name: String,
-  avtar: String,
+  avatar: String,
   reason: String,
   /**
    *  0 :default, 1: pass , 2: no pass

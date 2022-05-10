@@ -4,6 +4,8 @@
   .recommend-list {
     display: flex;
     flex-wrap: wrap;
+    max-height: 650px;
+    overflow: auto;
 
     .item {
       margin: 0 12px;

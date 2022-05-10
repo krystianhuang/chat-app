@@ -121,6 +121,7 @@ const reportUser = async (req, res) => {
 const getReportedList = async (req, res) => {
   try {
     const result = await ReportServices.getAll()
+    console.log('resulut', result)
     successResponse(res, result)
   } catch (error) {
     console.log('error', error)
